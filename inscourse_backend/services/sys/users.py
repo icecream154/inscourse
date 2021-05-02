@@ -5,25 +5,23 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from inscourse_backend.models.user import User
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS, APP_ID, APP_SECRET
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY, update_token
+from inscourse_backend.services.token_filter import acquire_token
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
 from inscourse_backend.utils.rpc import do_request
 
 
+@acquire_token
 def change_username(request):
-    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    if not user:
-        return HttpResponse(content='Unauthorized', status=401)
-
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
         new_name = parameter_dict['newName']
     except KeyError:
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     user.username = new_name
     user.save()
     return HttpResponse({
-        'code': 1,
         'message': u'修改成功'
     })
 
@@ -44,7 +42,6 @@ def login(request):
         user = User.objects.get(openid=openid)
         new_token, new_expire_time = update_token(user)
         return HttpResponse(json.dumps({
-            'code': 1,
             'message': u'登陆成功',
             'data': user.to_dict(),
             'token': new_token,
