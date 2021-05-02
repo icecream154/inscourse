@@ -22,3 +22,17 @@ class Course(models.Model):
     image = models.BinaryField()
     # 课程大类
     category = models.IntegerField()
+
+    def to_dict(self):
+        dictionary = {
+            'course_id': self.course_id,
+            'author_id': self.author_id,
+            'status': self.status,
+            'name': self.name,
+            'description': self.description,
+            'level': self.level,
+            'heat': self.heat,
+            'image': self.image,
+            'category': self.category
+        }
+        return dictionary
