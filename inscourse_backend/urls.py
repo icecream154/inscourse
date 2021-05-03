@@ -7,9 +7,9 @@ urlpatterns = [
     path('sys/login', login, name='login'),
     path('sys/admin_login', admin_login, name='admin_login'),
     path('sys/changeName', change_username, name='change_username'),
-
     path('course/fetchOpenCourses', fetch_open_courses, name='fetch_open_courses'),
     path('course/publish', publish, name='publish'),
     path('course/uploadCourse', upload_course, name='upload_course'),
-    path('course/queryCourse', query_course, name='query_course')
+    path('course/queryCourse', query_course, name='query_course'),
+    path('course/releaseResourse', release_resource, name='release_course')
 ]

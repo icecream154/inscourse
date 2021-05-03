@@ -1,11 +1,14 @@
 from django.db import models
 
+from inscourse_backend.models.course import Course
 from inscourse_backend.models.user import User
 
 
 class Resource(models.Model):
+    # 资源id
+    resource_id = models.models.AutoField(primary_key=True)
     # 课程ID
-    course_id = models.AutoField(primary_key=True)
+    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     # 用户id
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     # 资源名称
