@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.http import *
 
 from inscourse_backend.models.course import Course
+from inscourse_backend.models.resource import Resource
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
@@ -60,6 +61,9 @@ def upload_course(request):
                     description=description,
                     category=category)
     course.save()
+    return HttpResponse(json.dumps({
+        'message': u'新建成功'
+    }))
 
 
 @acquire_token
@@ -104,3 +108,27 @@ def publish(request):
         return HttpResponseNotFound(json.dumps({
             'message': u'无法查询到该课程'
         }))
+
+
+@acquire_token
+def release_resource(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    try:
+        course_id = parameter_dict['course_id']
+        description = parameter_dict['description']
+        resource_key = parameter_dict['resource_key']
+        type = parameter_dict['type']
+        content = parameter_dict['content']
+    except KeyError:
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    resource = Resource(course_id=course_id,
+                        user_id=user.user_id,
+                        resource_key=resource_key,
+                        description=description,
+                        type=type,
+                        content=content)
+    resource.save()
+    return HttpResponse(json.dumps({
+        'message': u'发布成功'
+    }))
