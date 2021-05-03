@@ -15,4 +15,15 @@ class Resource(models.Model):
     # 资源类别
     type = models.IntegerField()
     # 资源内容
-    content = models.CharField(max_length=255)
+    content = models.TextField()
+
+    def to_dict(self):
+        dictionary = {
+            'course_id': self.course_id,
+            'user_id': self.user_id,
+            'resource_key': self.resource_key,
+            'description': self.description,
+            'type': self.type,
+            'content': self.content
+        }
+        return dictionary

@@ -13,6 +13,17 @@ class MateSchedule(models.Model):
     # 日程内容
     content = models.TextField()
     # 百分比进度
-    progress = models.FloatField()
+    progress = models.IntegerField()
     # 当前状态
     status = models.IntegerField()
+
+    def to_dict(self):
+        dictionary = {
+            'schedule_id': self.schedule_id,
+            'mate_id': self.mate_id,
+            'date': self.date,
+            'content': self.content,
+            'progress': self.progress,
+            'status': self.status
+        }
+        return dictionary
