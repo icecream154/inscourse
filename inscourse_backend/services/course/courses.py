@@ -1,3 +1,5 @@
+import json
+
 from django.db.models import Q
 from django.http import *
 
@@ -32,14 +34,14 @@ def fetch_open_courses(request):
         for course in courses:
             course_list.append(course.to_dict())
         # 返回成功
-        return HttpResponse({
+        return HttpResponse(json.dumps({
             'count': count,
             'courses': course_list
-        })
+        }))
     except Course.DoesNotExist:
-        return HttpResponseNotFound({
-            'message': '没有查询到相关课程'
-        })
+        return HttpResponseNotFound(json.dumps({
+            'message': u'没有查询到相关课程'
+        }))
 
 
 @acquire_token
@@ -67,9 +69,9 @@ def query_course(request):
     courses_list = []
     for course in courses:
         courses_list.append(course.to_dict())
-    return HttpResponse({
+    return HttpResponse(json.dumps({
         'courses': courses_list
-    })
+    }))
 
 
 @acquire_token
@@ -84,24 +86,21 @@ def publish(request):
         # 是否为创建者
         user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
         if course.author_id != user.user_id:
-            return HttpResponseForbidden({
-                'message': '对不起，你不是课程的创建者'
-            })
+            return HttpResponseForbidden(json.dumps({
+                'message': u'对不起，你不是课程的创建者'
+            }))
         # 课程是否已经公开
         if course.status == 1:
-            return HttpResponseForbidden({
-                'message': '该课程已公开'
-            })
+            return HttpResponseForbidden(json.dumps({
+                'message': u'该课程已公开'
+            }))
         else:
             course.status = 1
             course.save()
-            return HttpResponse({
-                'message': '公开课程成功'
-            })
+            return HttpResponse(json.dumps({
+                'message': u'公开课程成功'
+            }))
     except Course.DoesNotExist:
-        return HttpResponseNotFound({
-            'message': '无法查询到该课程'
-        })
-
-
-
+        return HttpResponseNotFound(json.dumps({
+            'message': u'无法查询到该课程'
+        }))

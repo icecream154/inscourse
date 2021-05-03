@@ -21,9 +21,9 @@ def change_username(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     user.username = new_name
     user.save()
-    return HttpResponse({
+    return HttpResponse(json.dumps({
         'message': u'修改成功'
-    })
+    }))
 
 
 def login(request):
