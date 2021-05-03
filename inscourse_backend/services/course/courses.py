@@ -117,7 +117,7 @@ def release_resource(request):
         course_id = parameter_dict['course_id']
         description = parameter_dict['description']
         resource_key = parameter_dict['resource_key']
-        type = parameter_dict['type']
+        content_type = parameter_dict['content_type']
         content = parameter_dict['content']
     except KeyError:
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
@@ -126,7 +126,7 @@ def release_resource(request):
                         user_id=user.user_id,
                         resource_key=resource_key,
                         description=description,
-                        type=type,
+                        content_type=content_type,
                         content=content)
     resource.save()
     return HttpResponse(json.dumps({

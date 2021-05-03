@@ -6,7 +6,7 @@ from inscourse_backend.models.user import User
 
 class Resource(models.Model):
     # 资源id
-    resource_id = models.models.AutoField(primary_key=True)
+    resource_id = models.AutoField(primary_key=True)
     # 课程ID
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     # 用户id
@@ -16,7 +16,7 @@ class Resource(models.Model):
     # 资源介绍
     description = models.CharField(max_length=255)
     # 资源类别
-    type = models.IntegerField()
+    content_type = models.IntegerField()
     # 资源内容
     content = models.TextField()
 
@@ -26,7 +26,7 @@ class Resource(models.Model):
             'user_id': self.user_id,
             'resource_key': self.resource_key,
             'description': self.description,
-            'type': self.type,
+            'content_type': self.content_type,
             'content': self.content
         }
         return dictionary
