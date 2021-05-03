@@ -3,7 +3,7 @@ import json
 from django.test import Client
 
 BST_BASE_URL = 'http://localhost:8000/api/'
-TOKEN_HEADER_KEY = 'HTTP_AUTHORIZATION'
+TOKEN_HEADER_KEY = 'Token'
 
 
 def show_info(status_code: int, response_dict: dict):

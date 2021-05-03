@@ -6,7 +6,7 @@ from inscourse_backend.models.user import User
 token_dict = {}
 # default expire time set to 10800 seconds (3 hour)
 _EXPIRE_TIME = 10800
-TOKEN_HEADER_KEY = 'HTTP_AUTHORIZATION'
+TOKEN_HEADER_KEY = 'HTTP_TOKEN'
 
 
 def _get_token_by_id(token_dictionary: {str: (User, float)}, user_id: int):
