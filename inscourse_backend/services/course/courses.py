@@ -1,6 +1,5 @@
 import json
 
-from django.db.models import Q
 from django.http import *
 
 from inscourse_backend.models.course import Course
@@ -14,19 +13,19 @@ from inscourse_backend.utils.request_processor import fetch_parameter_dict
 def query_open_courses(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
     try:
-        course_id = parameter_dict['course_id']
-        category = parameter_dict['category']
-        # orderBy = parameter_dict['orderBy']
-        pageSize = parameter_dict['pageSize']
-        pageNum = parameter_dict['pageNum']
-    except KeyError:
+        name = parameter_dict['name']
+        category = int(parameter_dict['category'])
+        order_by = parameter_dict['order_by']
+        page_size = int(parameter_dict['page_size'])
+        page_num = int(parameter_dict['page_num'])
+    except (KeyError, TypeError):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     # 查询数据库
     try:
-        start = (pageNum - 1) * pageSize
-        end = start + pageSize
-        courses = Course.objects.filter(course_id=course_id, category=category, status=1)[start, end]
-        count = Course.objects.filter(course_id=course_id, category=category, status=1).count()
+        start = (page_num - 1) * page_size
+        end = start + page_size
+        courses = Course.objects.filter(name__contains=name, category=category, status=1)[start: end]
+        count = Course.objects.filter(name__contains=name, category=category, status=1).count()
         course_list = []
         for course in courses:
             course_list.append(course.to_dict())
@@ -60,7 +59,8 @@ def upload_course(request):
                     category=category)
     course.save()
     return HttpResponse(json.dumps({
-        'message': u'新建成功'
+        'message': u'新建成功',
+        'course_id': course.course_id
     }))
 
 

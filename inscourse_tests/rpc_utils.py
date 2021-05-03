@@ -19,7 +19,10 @@ def do_rpc_request(request_type: str, url: str, params: dict = None, headers: di
         except json.decoder.JSONDecodeError as ex:
             print(ex)
     elif response.status_code != 404:
-        response_dict = response.text
+        try:
+            response_dict = json.loads(response.text)
+        except Exception as e:
+            response_dict = response.text
     return response.status_code, response_dict
 
 
