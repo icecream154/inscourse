@@ -23,6 +23,7 @@ class Course(models.Model):
     # 课程大类
     category = models.IntegerField()
 
+
     def to_dict(self):
         dictionary = {
             'course_id': self.course_id,

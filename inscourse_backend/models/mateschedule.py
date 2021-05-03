@@ -17,6 +17,7 @@ class MateSchedule(models.Model):
     # 当前状态
     status = models.IntegerField()
 
+
     def to_dict(self):
         dictionary = {
             'schedule_id': self.schedule_id,

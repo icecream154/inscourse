@@ -12,4 +12,6 @@ def acquire_token(func):
         except KeyError:
             return HttpResponse(content='Unauthorized', status=401)
         return func(request)
+
+
     return wrapper

@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -48,7 +47,8 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(max_length=255)),
                 ('content_type', models.IntegerField()),
                 ('content', models.TextField()),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.course')),
+                ('course',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.course')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.user')),
             ],
         ),
@@ -66,7 +66,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mate',
             name='acceptor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='acceptor', to='inscourse_backend.user'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='acceptor',
+                                    to='inscourse_backend.user'),
         ),
         migrations.AddField(
             model_name='mate',
@@ -76,13 +77,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mate',
             name='requester',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='requester', to='inscourse_backend.user'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='requester',
+                                    to='inscourse_backend.user'),
         ),
         migrations.CreateModel(
             name='CourseJoin',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.course')),
+                ('course',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.course')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.user')),
             ],
         ),

@@ -1,7 +1,7 @@
 import time
 
-
 from inscourse_backend.models.user import User
+
 
 token_dict = {}
 # default expire time set to 10800 seconds (3 hour)

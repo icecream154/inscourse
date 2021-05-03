@@ -106,29 +106,3 @@ def publish(request):
         return HttpResponseNotFound(json.dumps({
             'message': u'无法查询到该课程'
         }))
-
-
-@acquire_token
-def release_resource(request):
-    parameter_dict = fetch_parameter_dict(request, 'POST')
-    try:
-        course_id = parameter_dict['course_id']
-        description = parameter_dict['description']
-        resource_key = parameter_dict['resource_key']
-        content_type = parameter_dict['content_type']
-        content = parameter_dict['content']
-        course = Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
-        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
-
-    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    resource = Resource(course=course,
-                        user=user,
-                        resource_key=resource_key,
-                        description=description,
-                        content_type=content_type,
-                        content=content)
-    resource.save()
-    return HttpResponse(json.dumps({
-        'message': u'发布成功'
-    }))
