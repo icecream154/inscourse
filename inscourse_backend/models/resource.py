@@ -8,9 +8,9 @@ class Resource(models.Model):
     # 资源id
     resource_id = models.AutoField(primary_key=True)
     # 课程ID
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
-    # 用户id
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    # 上传用户id
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     # 资源名称
     resource_key = models.CharField(max_length=20)
     # 资源介绍
@@ -22,8 +22,8 @@ class Resource(models.Model):
 
     def to_dict(self):
         dictionary = {
-            'course_id': self.course_id,
-            'user_id': self.user_id,
+            'course_id': self.course.course_id,
+            'user_id': self.user.user_id,
             'resource_key': self.resource_key,
             'description': self.description,
             'content_type': self.content_type,

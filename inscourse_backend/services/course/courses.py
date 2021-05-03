@@ -11,7 +11,7 @@ from inscourse_backend.services.token_filter import acquire_token
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
 
 
-def fetch_open_courses(request):
+def query_open_courses(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
     try:
         course_id = parameter_dict['course_id']
@@ -25,12 +25,8 @@ def fetch_open_courses(request):
     try:
         start = (pageNum - 1) * pageSize
         end = start + pageSize
-        courses = Course.objects.filter(
-            Q(course_id=course_id) & Q(category=category)
-        )[start, end]
-        count = Course.objects.filter(
-            Q(course_id=course_id) & Q(category=category)
-        ).count()
+        courses = Course.objects.filter(course_id=course_id, category=category, status=1)[start, end]
+        count = Course.objects.filter(course_id=course_id, category=category, status=1).count()
         course_list = []
         for course in courses:
             course_list.append(course.to_dict())
@@ -55,9 +51,11 @@ def upload_course(request):
     except KeyError:
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    course = Course(author_id=user.user_id,
+    course = Course(author=user,
                     status=0,
                     name=name,
+                    level=0,
+                    heat=0,
                     description=description,
                     category=category)
     course.save()
@@ -67,9 +65,9 @@ def upload_course(request):
 
 
 @acquire_token
-def query_course(request):
+def query_my_course(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    courses = Course.objects.filter(author_id=user.user_id)
+    courses = Course.objects.filter(author=user)
     courses_list = []
     for course in courses:
         courses_list.append(course.to_dict())
@@ -89,7 +87,7 @@ def publish(request):
         course = Course.objects.get(course_id=course_id)
         # 是否为创建者
         user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-        if course.author_id != user.user_id:
+        if course.author.user_id != user.user_id:
             return HttpResponseForbidden(json.dumps({
                 'message': u'对不起，你不是课程的创建者'
             }))
@@ -119,11 +117,13 @@ def release_resource(request):
         resource_key = parameter_dict['resource_key']
         content_type = parameter_dict['content_type']
         content = parameter_dict['content']
-    except KeyError:
+        course = Course.objects.get(course_id=course_id)
+    except (KeyError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    resource = Resource(course_id=course_id,
-                        user_id=user.user_id,
+    resource = Resource(course=course,
+                        user=user,
                         resource_key=resource_key,
                         description=description,
                         content_type=content_type,

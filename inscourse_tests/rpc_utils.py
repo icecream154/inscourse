@@ -13,7 +13,6 @@ def show_info(status_code: int, response_dict: dict):
 def do_rpc_request(request_type: str, url: str, params: dict = None, headers: dict = None, data: dict = None):
     response = requests.request(request_type, BST_BASE_URL + url, params=params, headers=headers, data=data)
     response_dict = None
-    print(response.request.headers)
     if response.status_code == 200:
         try:
             response_dict = json.loads(response.text)

@@ -7,7 +7,7 @@ class MateSchedule(models.Model):
     # 日程id
     schedule_id = models.AutoField(primary_key=True)
     # 课友关系id
-    mate_id = models.ForeignKey(Mate, on_delete=models.CASCADE)
+    mate = models.ForeignKey(Mate, on_delete=models.CASCADE)
     # 日程时间
     date = models.DateField()
     # 日程内容
@@ -20,7 +20,7 @@ class MateSchedule(models.Model):
     def to_dict(self):
         dictionary = {
             'schedule_id': self.schedule_id,
-            'mate_id': self.mate_id,
+            'mate_id': self.mate.mate_id,
             'date': self.date,
             'content': self.content,
             'progress': self.progress,

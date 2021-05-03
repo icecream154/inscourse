@@ -7,8 +7,8 @@ class Course(models.Model):
     # 课程id
     course_id = models.AutoField(primary_key=True)
     # 上传者id
-    author_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    # 课程公开状态
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # 课程公开状态 (0 为私有， 1 为公开)
     status = models.IntegerField()
     # 课程名
     name = models.CharField(max_length=20)
@@ -19,14 +19,14 @@ class Course(models.Model):
     # 课程热度
     heat = models.IntegerField()
     # 课程图标
-    image = models.BinaryField()
+    image = models.CharField(max_length=255, null=True)
     # 课程大类
     category = models.IntegerField()
 
     def to_dict(self):
         dictionary = {
             'course_id': self.course_id,
-            'author_id': self.author_id,
+            'author_id': self.author.user_id,
             'status': self.status,
             'name': self.name,
             'description': self.description,
