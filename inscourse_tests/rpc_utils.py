@@ -3,11 +3,17 @@ import json
 from django.test import Client
 
 BST_BASE_URL = 'http://localhost:8000/api/'
+TOKEN_HEADER_KEY = 'HTTP_AUTHORIZATION'
+
+
+def show_info(status_code: int, response_dict: dict):
+    print('status_code[%d] and response: [%s]' % (status_code, response_dict))
 
 
 def do_rpc_request(request_type: str, url: str, params: dict = None, headers: dict = None, data: dict = None):
     response = requests.request(request_type, BST_BASE_URL + url, params=params, headers=headers, data=data)
     response_dict = None
+    print(response.request.headers)
     if response.status_code == 200:
         try:
             response_dict = json.loads(response.text)
