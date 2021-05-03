@@ -1,7 +1,6 @@
 import time
 
 
-# dictionary to store tokens and BankTellers ({str: (BankTeller, float)})
 from inscourse_backend.models.user import User
 
 token_dict = {}

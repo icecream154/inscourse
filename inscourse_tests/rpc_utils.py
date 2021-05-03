@@ -2,7 +2,7 @@ import requests
 import json
 from django.test import Client
 
-BST_BASE_URL = 'http://localhost:8000/inscourse/'
+BST_BASE_URL = 'http://localhost:8000/api/'
 
 
 def do_rpc_request(request_type: str, url: str, params: dict = None, headers: dict = None, data: dict = None):

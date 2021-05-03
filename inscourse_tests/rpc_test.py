@@ -1,9 +1,8 @@
-from inscourse_backend.services.sys.token import TOKEN_HEADER_KEY
-from inscourse_tests.rpc_utils import do_post_request, do_get_request
+from inscourse_tests.rpc_utils import *
 
 
 def sys_admin_login(openid: str, username: str):
-    return do_post_request('sys/admin_login', data={'openid': openid, 'username': username})
+    return do_rpc_post_request('sys/admin_login', data={'openid': openid, 'username': username})
 
 
 def show_info(status_code: int, response_dict: dict):

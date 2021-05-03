@@ -37,6 +37,7 @@ def admin_login(request):
         user = User.objects.get(openid=openid)
         new_token, new_expire_time = update_token(user)
         return HttpResponse(json.dumps({
+            'new_user': 0,
             'message': u'登陆成功',
             'data': user.to_dict(),
             'token': new_token,
@@ -47,7 +48,7 @@ def admin_login(request):
         new_user.save()
         new_token, new_expire_time = update_token(new_user)
         return HttpResponse(json.dumps({
-            'code': 1,
+            'new_user': 1,
             'message': u'登陆成功',
             'data': new_user.to_dict(),
             'token': new_token,
@@ -71,6 +72,7 @@ def login(request):
         user = User.objects.get(openid=openid)
         new_token, new_expire_time = update_token(user)
         return HttpResponse(json.dumps({
+            'new_user': 0,
             'message': u'登陆成功',
             'data': user.to_dict(),
             'token': new_token,
@@ -81,7 +83,7 @@ def login(request):
         new_user.save()
         new_token, new_expire_time = update_token(new_user)
         return HttpResponse(json.dumps({
-            'code': 1,
+            'new_user': 1,
             'message': u'登陆成功',
             'data': new_user.to_dict(),
             'token': new_token,
