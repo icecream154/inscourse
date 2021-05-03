@@ -26,6 +26,35 @@ def change_username(request):
     }))
 
 
+def admin_login(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    try:
+        openid = parameter_dict['openid']
+        username = parameter_dict['username']
+    except KeyError:
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    try:
+        user = User.objects.get(openid=openid)
+        new_token, new_expire_time = update_token(user)
+        return HttpResponse(json.dumps({
+            'message': u'登陆成功',
+            'data': user.to_dict(),
+            'token': new_token,
+            'expire_time': new_expire_time
+        }))
+    except User.DoesNotExist:
+        new_user = User(openid=openid, username=username)
+        new_user.save()
+        new_token, new_expire_time = update_token(new_user)
+        return HttpResponse(json.dumps({
+            'code': 1,
+            'message': u'登陆成功',
+            'data': new_user.to_dict(),
+            'token': new_token,
+            'expire_time': new_expire_time
+        }))
+
+
 def login(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
