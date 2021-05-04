@@ -3,7 +3,7 @@ from django.urls import path
 from inscourse_backend.services.course.courses import *
 from inscourse_backend.services.resource.resources import *
 from inscourse_backend.services.sys.users import *
-
+from inscourse_backend.services.mate.mates import *
 
 urlpatterns = [
     # 用户模块
@@ -21,5 +21,13 @@ urlpatterns = [
     path('resource/releaseResource', release_resource, name='release_resource'),
     path('resource/queryResourceByCourse', query_resource_by_course, name='query_resource_by_course'),
     path('resource/modifyResource', modify_resource, name='modify_resource'),
-    path('resource/deleteResource', delete_resource, name='delete_resource')
+    path('resource/deleteResource', delete_resource, name='delete_resource'),
+
+    # 课友模块
+    path('mate/queryMyMates', query_my_mates, name='query_my_mates'),
+    path('mate/queryMyMatesByCourse', query_my_mates_by_course, name='query_my_mates_by_course'),
+    path('mate/createMate', create_mate, name='create_mate'),
+    path('mate/inviteMate', invite_mate, name='invite_mate'),
+    path('mate/acceptMateInvitation', accept_mate_invitation, name='accept_mate_invitation')
+
 ]

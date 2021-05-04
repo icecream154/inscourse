@@ -7,6 +7,7 @@ from inscourse_backend.models.mate import Mate
 from inscourse_backend.models.mateschedule import MateSchedule
 from inscourse_backend.models.user import User
 from inscourse_backend.models.resource import Resource
+from inscourse_backend.models.mateinvitation import MateInvitation
 
 
 admin.site.register(User)
@@ -15,3 +16,4 @@ admin.site.register(CourseJoin)
 admin.site.register(Mate)
 admin.site.register(MateSchedule)
 admin.site.register(Resource)
+admin.site.register(MateInvitation)
