@@ -1,65 +1,8 @@
+from inscourse_tests.api_requests.sys_requests import *
+from inscourse_tests.api_requests.course_requests import *
+from inscourse_tests.api_requests.resource_requests import *
+
 from inscourse_tests.rpc_utils import *
-
-
-def sys_admin_login(openid: str, username: str, is_rpc=True):
-    if is_rpc:
-        return do_rpc_post_request('sys/adminLogin', data={'openid': openid, 'username': username})
-    return do_post_request('sys/adminLogin', data={'openid': openid, 'username': username})
-
-
-def sys_change_username(token: str, new_name: str, is_rpc=True):
-    if is_rpc:
-        return do_rpc_post_request('sys/changeUsername', headers={TOKEN_HEADER_KEY: token}, data={'newName': new_name})
-    return do_post_request('sys/changeUsername', headers={TOKEN_HEADER_KEY: token}, data={'newName': new_name})
-
-
-def course_upload(token: str, name: str, description: str, category: int, is_rpc=True):
-    if is_rpc:
-        return do_rpc_post_request('course/uploadCourse', headers={TOKEN_HEADER_KEY: token}, data={
-            'name': name,
-            'description': description,
-            'category': category
-        })
-    return do_post_request('course/uploadCourse', headers={TOKEN_HEADER_KEY: token}, data={
-        'name': name,
-        'description': description,
-        'category': category
-    })
-
-
-def course_publish(token: str, course_id: int, is_rpc=True):
-    if is_rpc:
-        return do_rpc_post_request('course/publish', headers={TOKEN_HEADER_KEY: token}, data={
-            'course_id': course_id
-        })
-    return do_rpc_post_request('course/publish', headers={TOKEN_HEADER_KEY: token}, data={
-        'course_id': course_id
-    })
-
-
-def course_query_my_course(token: str, is_rpc=True):
-    if is_rpc:
-        return do_rpc_get_request('course/queryMyCourse', headers={TOKEN_HEADER_KEY: token})
-    return do_rpc_get_request('course/queryMyCourse', headers={TOKEN_HEADER_KEY: token})
-
-
-def course_query_open_courses(name: str, category: int, order_by: str, page_size: int, page_num: int, is_rpc=True):
-    if is_rpc:
-        return do_rpc_get_request('course/queryOpenCourses', params={
-            'name': name,
-            'category': category,
-            'order_by': order_by,
-            'page_size': page_size,
-            'page_num': page_num
-        })
-    return do_rpc_get_request('course/queryOpenCourses', params={
-        'name': name,
-        'category': category,
-        'order_by': order_by,
-        'page_size': page_size,
-        'page_num': page_num
-    })
-
 
 # 数据库初始化脚本
 if __name__ == '__main__':
@@ -106,6 +49,7 @@ if __name__ == '__main__':
     # course 3: C++
     status_code, response_dict = course_upload(user2_token, 'C++ Programming', 'C++ is just dark magic.', 1)
     show_info(status_code, response_dict)
+    c_plus_plus_course_id = response_dict['course_id']
 
     # 目前 user1 有一个java课程，已公开， user2 有两个课程, c 公开了， c++ 未公开
 
@@ -121,3 +65,41 @@ if __name__ == '__main__':
     status_code, response_dict = course_query_open_courses('', 1, 'default', 5, 1)
     show_info(status_code, response_dict)
 
+    # user 1 上传 java 资源
+    status_code, response_dict = resource_release(user1_token, java_course_id, 'textbook',
+                                                  'This is the classic textbook for java programming.', 1,
+                                                  'https://fakegoturl.cn')
+    show_info(status_code, response_dict)
+    java_resource1_id = response_dict['resource_id']
+
+    # user 2 上传 java 资源
+    status_code, response_dict = resource_release(user2_token, java_course_id, 'notes',
+                                                  'This is my notes when learning java.', 2,
+                                                  'You\'d better learn java from the very beginning to have a better'
+                                                  'understanding of object oriented programming')
+    show_info(status_code, response_dict)
+    java_resource2_id = response_dict['resource_id']
+
+    # 查询 java 课的资源
+    status_code, response_dict = resource_query_by_course(user1_token, java_course_id)
+    show_info(status_code, response_dict)
+
+    # user 1 修改资源 1，修改成功
+    status_code, response_dict = resource_modify(user1_token, java_resource1_id, 'textbook',
+                                                 'This is the classic textbook for java programming.', 1,
+                                                 'https://another.fakegoturl.cn')
+    show_info(status_code, response_dict)
+
+    # user 2 修改资源 1，修改失败
+    status_code, response_dict = resource_modify(user2_token, java_resource1_id, 'textbook',
+                                                 'Useless description', 1,
+                                                 'https://another2.fakegoturl.cn')
+    show_info(status_code, response_dict)
+
+    # user 2 删除资源 2，删除失败
+    status_code, response_dict = resource_delete(user2_token, java_resource2_id)
+    show_info(status_code, response_dict)
+
+    # 查询 java 课的资源，只剩下修改过的资源 1
+    status_code, response_dict = resource_query_by_course(user1_token, java_course_id)
+    show_info(status_code, response_dict)

@@ -22,6 +22,7 @@ class Resource(models.Model):
 
     def to_dict(self):
         dictionary = {
+            'resource_id': self.resource_id,
             'course_id': self.course.course_id,
             'user_id': self.user.user_id,
             'resource_key': self.resource_key,

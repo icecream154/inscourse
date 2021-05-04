@@ -31,13 +31,14 @@ def release_resource(request):
                         content=content)
     resource.save()
     return HttpResponse(json.dumps({
-        'message': u'发布成功'
+        'message': u'发布成功',
+        'resource_id': resource.resource_id
     }))
 
 
 @acquire_token
 def query_resource_by_course(request):
-    parameter_dict = fetch_parameter_dict(request, 'POST')
+    parameter_dict = fetch_parameter_dict(request, 'GET')
 
     # 检查course_id
     try:
@@ -46,7 +47,7 @@ def query_resource_by_course(request):
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
-    resources = course.resource_set
+    resources = course.resource_set.all()
     resources_list = []
     for resource in resources:
         resources_list.append(resource.to_dict())
