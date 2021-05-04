@@ -20,7 +20,6 @@ class Resource(models.Model):
     # 资源内容
     content = models.TextField()
 
-
     def to_dict(self):
         dictionary = {
             'course_id': self.course.course_id,

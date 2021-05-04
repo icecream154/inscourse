@@ -16,7 +16,6 @@ class Mate(models.Model):
     # 建立时间
     establish_time = models.DateTimeField()
 
-
     def to_dict(self):
         dictionary = {
             'mate_id': self.mate_id,

@@ -9,7 +9,6 @@ class User(models.Model):
     # 用户名
     username = models.CharField(max_length=20)
 
-
     def to_dict(self):
         dictionary = {
             'user_id': self.user_id,

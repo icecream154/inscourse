@@ -14,13 +14,13 @@ from inscourse_backend.utils.request_processor import fetch_parameter_dict
 def release_resource(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
-        course_id = parameter_dict['course_id']
+        course_id = int(parameter_dict['course_id'])
         resource_key = parameter_dict['resource_key']
         description = parameter_dict['description']
-        content_type = parameter_dict['content_type']
+        content_type = int(parameter_dict['content_type'])
         content = parameter_dict['content']
         course = Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
+    except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     resource = Resource(course=course,
@@ -36,18 +36,17 @@ def release_resource(request):
 
 
 @acquire_token
-def query_resource(request):
+def query_resource_by_course(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
 
     # 检查course_id
     try:
-        course_id = parameter_dict['course_id']
+        course_id = int(parameter_dict['course_id'])
         course = Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
+    except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
-    # 查询course的resource
-    resources = Resource.objects.filter(course_id=course_id)
+    resources = course.resource_set
     resources_list = []
     for resource in resources:
         resources_list.append(resource.to_dict())
@@ -62,9 +61,9 @@ def modify_resource(request):
 
     # 检查resource_id
     try:
-        resource_id = parameter_dict['resource_id']
+        resource_id = int(parameter_dict['resource_id'])
         resource = Resource.objects.get(resource_id=resource_id)
-    except(KeyError, Resource.DoesNotExist):
+    except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     # 核对resource提交人
@@ -76,18 +75,16 @@ def modify_resource(request):
 
     # 修改resource
     try:
-        course_id = parameter_dict['course_id']
         resource_key = parameter_dict['resource_key']
         description = parameter_dict['description']
         content_type = parameter_dict['content_type']
         content = parameter_dict['content']
     except KeyError:
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
-    resource.course_id = parameter_dict['course_id']
-    resource.resource_key = parameter_dict['resource_key']
-    resource.description = parameter_dict['description']
-    resource.content_type = parameter_dict['content_type']
-    resource.content = parameter_dict['content']
+    resource.resource_key = resource_key
+    resource.description = description
+    resource.content_type = content_type
+    resource.content = content
     resource.save()
     return HttpResponse(json.dumps({
         'message': u'修改成功'
@@ -100,9 +97,9 @@ def delete_resource(request):
 
     # 检查resource_id
     try:
-        resource_id = parameter_dict['resource_id']
+        resource_id = int(parameter_dict['resource_id'])
         resource = Resource.objects.get(resource_id=resource_id)
-    except(KeyError, Resource.DoesNotExist):
+    except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     # 核对resource提交人

@@ -16,7 +16,6 @@ class MateInvitation(models.Model):
     # 邀请接受状况 0: 等待接受 1: 接受邀请 -1: 拒绝邀请
     status = models.IntegerField()
 
-
     def to_dict(self):
         dictionary = {
             'invitation_id': self.invitation_id,

@@ -13,5 +13,4 @@ def acquire_token(func):
             return HttpResponse(content='Unauthorized', status=401)
         return func(request)
 
-
     return wrapper

@@ -3,7 +3,6 @@ import json
 from django.http import *
 
 from inscourse_backend.models.course import Course
-from inscourse_backend.models.resource import Resource
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
