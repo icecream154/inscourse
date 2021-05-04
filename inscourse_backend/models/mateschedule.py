@@ -14,7 +14,7 @@ class MateSchedule(models.Model):
     content = models.TextField()
     # 百分比进度
     progress = models.IntegerField()
-    # 当前状态
+    # 当前状态 0: 未完成 1: 已完成
     status = models.IntegerField()
 
     def to_dict(self):

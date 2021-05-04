@@ -23,12 +23,14 @@ def release_resource(request):
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    resource = Resource(course=course,
-                        user=user,
-                        resource_key=resource_key,
-                        description=description,
-                        content_type=content_type,
-                        content=content)
+    resource = Resource(
+        course=course,
+        user=user,
+        resource_key=resource_key,
+        description=description,
+        content_type=content_type,
+        content=content
+    )
     resource.save()
     return HttpResponse(json.dumps({
         'message': u'发布成功',
@@ -80,7 +82,7 @@ def modify_resource(request):
         description = parameter_dict['description']
         content_type = parameter_dict['content_type']
         content = parameter_dict['content']
-    except KeyError:
+    except (KeyError, TypeError):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     resource.resource_key = resource_key
     resource.description = description

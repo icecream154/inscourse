@@ -19,12 +19,13 @@ def query_my_mates(request):
         for mate in mates:
             mate_list.append(mate.to_dict())
         return HttpResponse(json.dumps({
-            'mates':mate_list
+            'mates': mate_list
         }))
     except Mate.DoesNotExist:
         return HttpResponseNotFound(json.dumps({
             'message': u'当前没有课友'
         }))
+
 
 @acquire_token
 def query_my_mates_by_course(request):

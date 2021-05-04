@@ -4,6 +4,8 @@ from inscourse_backend.services.course.courses import *
 from inscourse_backend.services.resource.resources import *
 from inscourse_backend.services.sys.users import *
 from inscourse_backend.services.mate.mates import *
+from inscourse_backend.services.schedule.schedules import *
+
 
 urlpatterns = [
     # 用户模块
@@ -28,6 +30,12 @@ urlpatterns = [
     path('mate/queryMyMatesByCourse', query_my_mates_by_course, name='query_my_mates_by_course'),
     path('mate/createMate', create_mate, name='create_mate'),
     path('mate/inviteMate', invite_mate, name='invite_mate'),
-    path('mate/acceptMateInvitation', accept_mate_invitation, name='accept_mate_invitation')
+    path('mate/acceptMateInvitation', accept_mate_invitation, name='accept_mate_invitation'),
 
+    # 日程模块
+    path('schedule/queryMySchedules', query_my_schedules, name='query_my_schedules'),
+    path('schedule/queryMySchedulesByCourse', query_my_schedules_by_course, name='query_my_schedules_by_course'),
+    path('schedule/newSchedule', new_schedule, name='new_schedule'),
+    path('schedule/modifySchedule', modify_schedule, name='modify_schedule'),
+    path('schedule/deleteSchedule', delete_schedule, name='delete_schedule'),
 ]
