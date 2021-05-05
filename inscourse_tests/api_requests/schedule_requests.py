@@ -3,10 +3,14 @@ from inscourse_tests.rpc_utils import *
 
 def schedule_query_by_mate(token: str, mate_id: int, is_rpc=True):
     if is_rpc:
-        return do_rpc_get_request('schedule/queryMySchedulesByMate', headers={TOKEN_HEADER_KEY: token},
-                                  params={'mate_id': mate_id})
-    return do_get_request('schedule/queryMySchedulesByMate', headers={TOKEN_HEADER_KEY: token},
-                          params={'mate_id': mate_id})
+        return do_rpc_post_request('schedule/queryMySchedulesByMate', headers={TOKEN_HEADER_KEY: token},
+                                   data={
+                                       'mate_id': mate_id
+                                   })
+    return do_post_request('schedule/queryMySchedulesByMate', headers={TOKEN_HEADER_KEY: token},
+                           data={
+                               'mate_id': mate_id
+                           })
 
 
 def schedule_new(token: str, mate_id: int, content: str, schedule_date: str, is_rpc=True):
