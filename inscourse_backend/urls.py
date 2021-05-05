@@ -33,8 +33,7 @@ urlpatterns = [
     path('mate/dealMateInvitation', deal_mate_invitation, name='deal_mate_invitation'),
 
     # 日程模块
-    path('schedule/queryMySchedules', query_my_schedules, name='query_my_schedules'),
-    path('schedule/queryMySchedulesByCourse', query_my_schedules_by_course, name='query_my_schedules_by_course'),
+    path('schedule/queryMySchedulesByMate', query_my_schedules_by_mate, name='query_my_schedules_by_mate'),
     path('schedule/newSchedule', new_schedule, name='new_schedule'),
     path('schedule/modifySchedule', modify_schedule, name='modify_schedule'),
     path('schedule/deleteSchedule', delete_schedule, name='delete_schedule'),
