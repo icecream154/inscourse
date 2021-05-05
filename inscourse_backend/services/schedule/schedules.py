@@ -77,9 +77,9 @@ def modify_schedule(request):
     try:
         schedule_id = int(parameter_dict['schedule_id'])
         schedule = MateSchedule.objects.get(schedule_id=schedule_id)
-        schedule_date = datetime.strptime(parameter_dict['schedule_date'], DATE_FORMAT).date()
         content = parameter_dict['content']
-    except(KeyError, TypeError, MateSchedule.DoesNotExist):
+        schedule_date = datetime.strptime(parameter_dict['schedule_date'], DATE_FORMAT).date()
+    except(KeyError, ValueError, TypeError, MateSchedule.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     # 核对schedule mate

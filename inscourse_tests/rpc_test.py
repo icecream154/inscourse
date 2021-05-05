@@ -2,6 +2,7 @@ from inscourse_tests.api_requests.sys_requests import *
 from inscourse_tests.api_requests.course_requests import *
 from inscourse_tests.api_requests.resource_requests import *
 from inscourse_tests.api_requests.mate_requests import *
+from inscourse_tests.api_requests.schedule_requests import *
 from inscourse_tests.rpc_utils import *
 
 # 数据库初始化脚本
@@ -175,6 +176,7 @@ if __name__ == '__main__':
     # user 2 查询所有课友，有 java 课友 user 1
     status_code, response_dict = mate_query_all(user2_token)
     show_info(status_code, response_dict)
+    java_mate_id = response_dict['mates'][0]['mate_id']
 
     # user 2 查询 java 课友，有 user1
     status_code, response_dict = mate_query_by_course(user2_token, java_course_id)
@@ -182,4 +184,42 @@ if __name__ == '__main__':
 
     # user 2 查询 c 课友，无结果
     status_code, response_dict = mate_query_by_course(user2_token, c_course_id)
+    show_info(status_code, response_dict)
+
+    # 日程模块测试
+    # ---------------------------------------------------------
+    show_separate_line()
+
+    # user2 新建 Chapter 1 日程
+    status_code, response_dict = schedule_new(user2_token, java_mate_id, 'Chapter 1', '2021-05-10')
+    show_info(status_code, response_dict)
+    java_chapter1_schedule_id = response_dict['schedule_id']
+
+    # user1 新建 Chapter 2 日程
+    status_code, response_dict = schedule_new(user1_token, java_mate_id, 'Chapter 2', '2021-05-12')
+    show_info(status_code, response_dict)
+    java_chapter2_schedule_id = response_dict['schedule_id']
+
+    # user1 查询日程
+    status_code, response_dict = schedule_query_by_mate(user1_token, java_mate_id)
+    show_info(status_code, response_dict)
+
+    # user1 修改 Chapter 1 日程
+    status_code, response_dict = schedule_modify(user1_token, java_chapter1_schedule_id, 'New Chapter 1', '2021-05-11')
+    show_info(status_code, response_dict)
+
+    # user2 修改 Chapter 2 日程
+    status_code, response_dict = schedule_modify(user1_token, java_chapter2_schedule_id, 'New Chapter 2', '2021-05-13')
+    show_info(status_code, response_dict)
+
+    # user2 查询日程
+    status_code, response_dict = schedule_query_by_mate(user2_token, java_mate_id)
+    show_info(status_code, response_dict)
+
+    # user2 删除 Chapter 2 日程
+    status_code, response_dict = schedule_delete(user2_token, java_chapter2_schedule_id)
+    show_info(status_code, response_dict)
+
+    # user1 查询日程
+    status_code, response_dict = schedule_query_by_mate(user1_token, java_mate_id)
     show_info(status_code, response_dict)

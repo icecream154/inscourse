@@ -2,6 +2,7 @@ from django.db import models
 
 from inscourse_backend.models.course import Course
 from inscourse_backend.models.user import User
+from inscourse_backend.services.constants import DATE_TIME_FORMAT
 
 
 class Mate(models.Model):
@@ -22,6 +23,6 @@ class Mate(models.Model):
             'course_id': self.course.course_id,
             'requester_id': self.requester.user_id,
             'acceptor_id': self.acceptor.user_id,
-            'establish_time': str(self.establish_time)
+            'establish_time': self.establish_time.strftime(DATE_TIME_FORMAT)
         }
         return dictionary
