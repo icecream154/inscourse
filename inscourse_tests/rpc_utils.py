@@ -6,6 +6,10 @@ BST_BASE_URL = 'http://localhost:8000/api/'
 TOKEN_HEADER_KEY = 'Token'
 
 
+def show_separate_line():
+    print('---------------------------------------------------------')
+
+
 def show_info(status_code: int, response_dict: dict):
     print('status_code[%d] and response: [%s]' % (status_code, response_dict))
 

@@ -20,23 +20,18 @@ def query_open_courses(request):
     except (KeyError, TypeError):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     # 查询数据库
-    try:
-        start = (page_num - 1) * page_size
-        end = start + page_size
-        courses = Course.objects.filter(name__contains=name, category=category, status=1)[start: end]
-        count = Course.objects.filter(name__contains=name, category=category, status=1).count()
-        course_list = []
-        for course in courses:
-            course_list.append(course.to_dict())
-        # 返回成功
-        return HttpResponse(json.dumps({
-            'count': count,
-            'courses': course_list
-        }))
-    except Course.DoesNotExist:
-        return HttpResponseNotFound(json.dumps({
-            'message': u'没有查询到相关课程'
-        }))
+    start = (page_num - 1) * page_size
+    end = start + page_size
+    courses = Course.objects.filter(name__contains=name, category=category, status=1)[start: end]
+    count = Course.objects.filter(name__contains=name, category=category, status=1).count()
+    course_list = []
+    for course in courses:
+        course_list.append(course.to_dict())
+    # 返回成功
+    return HttpResponse(json.dumps({
+        'count': count,
+        'courses': course_list
+    }))
 
 
 @acquire_token

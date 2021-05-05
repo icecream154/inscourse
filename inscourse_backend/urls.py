@@ -12,6 +12,7 @@ urlpatterns = [
     path('sys/login', login, name='login'),
     path('sys/adminLogin', admin_login, name='admin_login'),
     path('sys/changeUsername', change_username, name='change_username'),
+    path('sys/getMyInfo', get_my_info, name='get_my_info'),
 
     # 课程模块
     path('course/queryOpenCourses', query_open_courses, name='query_open_courses'),
@@ -29,9 +30,7 @@ urlpatterns = [
     path('mate/queryMyMates', query_my_mates, name='query_my_mates'),
     path('mate/queryMyMatesByCourse', query_my_mates_by_course, name='query_my_mates_by_course'),
     path('mate/inviteMate', invite_mate, name='invite_mate'),
-    path('mate/acceptMateInvitation', accept_mate_invitation, name='accept_mate_invitation'),
-    path('mate/refuseMateInvitation', refuse_mate_invitation, name='refuse_mate_invitation'),
-
+    path('mate/dealMateInvitation', deal_mate_invitation, name='deal_mate_invitation'),
 
     # 日程模块
     path('schedule/queryMySchedules', query_my_schedules, name='query_my_schedules'),

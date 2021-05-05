@@ -22,6 +22,6 @@ class Mate(models.Model):
             'course_id': self.course.course_id,
             'requester_id': self.requester.user_id,
             'acceptor_id': self.acceptor.user_id,
-            'establish_time': self.establish_time
+            'establish_time': str(self.establish_time)
         }
         return dictionary

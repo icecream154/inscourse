@@ -11,6 +11,14 @@ from inscourse_backend.utils.rpc import do_request
 
 
 @acquire_token
+def get_my_info(request):
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    return HttpResponse(json.dumps({
+        'user': user.to_dict()
+    }))
+
+
+@acquire_token
 def change_username(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
