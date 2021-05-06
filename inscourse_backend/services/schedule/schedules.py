@@ -12,7 +12,7 @@ from inscourse_backend.utils.request_processor import fetch_parameter_dict
 
 @acquire_token
 def query_my_schedules_by_mate(request):
-    parameter_dict = fetch_parameter_dict(request, 'POST')
+    parameter_dict = fetch_parameter_dict(request, 'GET')
 
     try:
         mate_id = int(parameter_dict['mate_id'])
