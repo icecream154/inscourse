@@ -8,6 +8,7 @@ from inscourse_backend.models.resource.resource import Resource
 from inscourse_backend.models.resource.resource_fav import ResourceFav
 from inscourse_backend.models.resource.resource_prefer import ResourcePrefer
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
+from inscourse_backend.services.resource.resource_dict import to_resource_dict
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
@@ -65,7 +66,7 @@ def query_resource_by_course(request):
     resources = course.resource_set.all()
     resources_list = []
     for resource in resources:
-        resources_list.append(resource.to_dict(user))
+        resources_list.append(to_resource_dict(resource, user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -145,7 +146,7 @@ def query_my_resource_by_course(request):
     resources = course.resource_set.filter(user=user)
     resources_list = []
     for resource in resources:
-        resources_list.append(resource.to_dict(user))
+        resources_list.append(to_resource_dict(resource, user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -209,7 +210,7 @@ def query_favored_resource(request):
     favors = ResourceFav.objects.filter(resource__course=course, user=user)
     resources_list = []
     for favor in favors:
-        resources_list.append(favor.resource.to_dict(user))
+        resources_list.append(favor.to_resource_dict(resource, user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -271,5 +272,5 @@ def query_certain_resource(request):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     return HttpResponse(json.dumps({
-        'resource': resource.to_dict(user)
+        'resource': to_resource_dict(resource, user)
     }))

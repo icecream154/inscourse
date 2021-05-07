@@ -5,6 +5,7 @@ from django.http import *
 from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.course.course_join import CourseJoin
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
+from inscourse_backend.services.course.course_dict import to_course_dict
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
 from inscourse_backend.utils.invitation_code_generator import generate_course_invitation_code
@@ -20,7 +21,7 @@ def query_certain_course(request):
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     return HttpResponse(json.dumps({
-        'course': course.to_dict(user)
+        'course': to_course_dict(course, user)
     }))
 
 
@@ -43,7 +44,7 @@ def query_open_courses(request):
     count = Course.objects.filter(name__contains=name, category=category, status=1).count()
     course_list = []
     for course in courses:
-        course_list.append(course.to_dict(user))
+        course_list.append(to_course_dict(course, user))
     # 返回成功
     return HttpResponse(json.dumps({
         'count': count,
