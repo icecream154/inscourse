@@ -1,6 +1,6 @@
 from django.db import models
 
-from inscourse_backend.models.course import Course
+from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.user import User
 
 

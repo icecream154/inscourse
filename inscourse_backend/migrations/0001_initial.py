@@ -53,9 +53,9 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='MateSchedule',
+            name='MateAssignment',
             fields=[
-                ('schedule_id', models.AutoField(primary_key=True, serialize=False)),
+                ('assignment_id', models.AutoField(primary_key=True, serialize=False)),
                 ('content', models.TextField()),
                 ('status', models.IntegerField(default=0)),
                 ('schedule_date', models.DateField()),

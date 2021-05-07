@@ -2,7 +2,8 @@ import json
 
 from django.http import *
 
-from inscourse_backend.models.course import Course
+from inscourse_backend.models.course.course import Course
+from inscourse_backend.models.course.course_join import CourseJoin
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
@@ -34,6 +35,11 @@ def query_open_courses(request):
     }))
 
 
+# TODO: 实现课程邀请码生成算法
+def _generate_course_invitation_code():
+    pass
+
+
 @acquire_token
 def upload_course(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
@@ -47,11 +53,13 @@ def upload_course(request):
     course = Course(author=user,
                     status=0,
                     name=name,
+                    description=description,
                     level=0,
                     heat=0,
-                    description=description,
-                    category=category)
+                    category=category,
+                    invitation_code=_generate_course_invitation_code())
     course.save()
+    CourseJoin(user=user, course=course).save()
     return HttpResponse(json.dumps({
         'message': u'新建成功',
         'course_id': course.course_id
@@ -61,10 +69,10 @@ def upload_course(request):
 @acquire_token
 def query_my_course(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    courses = Course.objects.filter(author=user)
+    course_joins = user.coursejoin_set.all()
     courses_list = []
-    for course in courses:
-        courses_list.append(course.to_dict())
+    for course_join in course_joins:
+        courses_list.append(course_join.course.to_dict())
     return HttpResponse(json.dumps({
         'courses': courses_list
     }))

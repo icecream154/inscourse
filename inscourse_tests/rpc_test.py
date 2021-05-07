@@ -193,12 +193,12 @@ if __name__ == '__main__':
     # user2 新建 Chapter 1 日程
     status_code, response_dict = schedule_new(user2_token, java_mate_id, 'Chapter 1', '2021-05-10')
     show_info(status_code, response_dict)
-    java_chapter1_schedule_id = response_dict['schedule_id']
+    java_chapter1_schedule_id = response_dict['assignment_id']
 
     # user1 新建 Chapter 2 日程
     status_code, response_dict = schedule_new(user1_token, java_mate_id, 'Chapter 2', '2021-05-12')
     show_info(status_code, response_dict)
-    java_chapter2_schedule_id = response_dict['schedule_id']
+    java_chapter2_schedule_id = response_dict['assignment_id']
 
     # user1 查询日程
     status_code, response_dict = schedule_query_by_mate(user1_token, java_mate_id)

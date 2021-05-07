@@ -4,7 +4,7 @@ from inscourse_backend.services.course.courses import *
 from inscourse_backend.services.resource.resources import *
 from inscourse_backend.services.sys.users import *
 from inscourse_backend.services.mate.mates import *
-from inscourse_backend.services.schedule.schedules import *
+from inscourse_backend.services.assignment.assignments import *
 
 
 urlpatterns = [
@@ -20,21 +20,23 @@ urlpatterns = [
     path('course/uploadCourse', upload_course, name='upload_course'),
     path('course/queryMyCourse', query_my_course, name='query_my_course'),
 
-    # 资源模块
+    # 帖子模块 TODO: 查询某一门课下自己发的帖子
     path('resource/releaseResource', release_resource, name='release_resource'),
     path('resource/queryResourceByCourse', query_resource_by_course, name='query_resource_by_course'),
     path('resource/modifyResource', modify_resource, name='modify_resource'),
     path('resource/deleteResource', delete_resource, name='delete_resource'),
 
-    # 课友模块
-    path('mate/queryMyMates', query_my_mates, name='query_my_mates'),
-    path('mate/queryMyMatesByCourse', query_my_mates_by_course, name='query_my_mates_by_course'),
-    path('mate/inviteMate', invite_mate, name='invite_mate'),
-    path('mate/dealMateInvitation', deal_mate_invitation, name='deal_mate_invitation'),
+    # TODO: 帖子的（取消）收藏和（取消）点赞，查看已收藏的帖子
 
-    # 日程模块
-    path('schedule/queryMySchedulesByMate', query_my_schedules_by_mate, name='query_my_schedules_by_mate'),
-    path('schedule/newSchedule', new_schedule, name='new_schedule'),
-    path('schedule/modifySchedule', modify_schedule, name='modify_schedule'),
-    path('schedule/deleteSchedule', delete_schedule, name='delete_schedule'),
+    # # 课友模块
+    # path('mate/queryMyMates', query_my_mates, name='query_my_mates'),
+    # path('mate/queryMyMatesByCourse', query_my_mates_by_course, name='query_my_mates_by_course'),
+    # path('mate/inviteMate', invite_mate, name='invite_mate'),
+    # path('mate/dealMateInvitation', deal_mate_invitation, name='deal_mate_invitation'),
+    #
+    # # 日程模块
+    # path('assignment/queryMySchedulesByMate', query_my_assignments_by_mate, name='query_my_schedules_by_mate'),
+    # path('assignment/newSchedule', new_assignment, name='new_schedule'),
+    # path('assignment/modifySchedule', modify_assignment, name='modify_schedule'),
+    # path('assignment/deleteSchedule', delete_schedule, name='delete_schedule'),
 ]

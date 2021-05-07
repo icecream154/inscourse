@@ -28,7 +28,7 @@ def update_token(user: User):
     return new_token, new_expire_time
 
 
-def fetch_user_by_token(token: str):
+def fetch_user_by_token(token: str) -> User:
     try:
         user, expire_time = token_dict[token]
         if time.time() > expire_time:

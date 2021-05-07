@@ -6,7 +6,7 @@ from inscourse_backend.models.user import User
 class Course(models.Model):
     # 课程id
     course_id = models.AutoField(primary_key=True)
-    # 上传者id
+    # 上传者
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # 课程公开状态 (0 为私有， 1 为公开)
     status = models.IntegerField()
@@ -22,6 +22,8 @@ class Course(models.Model):
     image = models.CharField(max_length=255, null=True)
     # 课程大类
     category = models.IntegerField()
+    # 课程邀请码
+    invitation_code = models.CharField(max_length=6)
 
     def to_dict(self):
         dictionary = {
@@ -33,6 +35,7 @@ class Course(models.Model):
             'level': self.level,
             'heat': self.heat,
             'image': self.image,
-            'category': self.category
+            'category': self.category,
+            'invitation_code': self.invitation_code
         }
         return dictionary

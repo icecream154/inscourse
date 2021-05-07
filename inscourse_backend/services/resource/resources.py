@@ -2,8 +2,9 @@ import json
 
 from django.http import *
 
-from inscourse_backend.models.course import Course
-from inscourse_backend.models.resource import Resource
+from inscourse_backend.models.course.course import Course
+from inscourse_backend.models.course.course_join import CourseJoin
+from inscourse_backend.models.resource.resource import Resource
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
@@ -13,6 +14,7 @@ from inscourse_backend.utils.request_processor import fetch_parameter_dict
 @acquire_token
 def release_resource(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     try:
         course_id = int(parameter_dict['course_id'])
         resource_key = parameter_dict['resource_key']
@@ -20,9 +22,14 @@ def release_resource(request):
         content_type = int(parameter_dict['content_type'])
         content = parameter_dict['content']
         course = Course.objects.get(course_id=course_id)
+        CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
-    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    except CourseJoin.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'你还未加入课程'
+        }))
+
     resource = Resource(
         course=course,
         user=user,
@@ -41,13 +48,18 @@ def release_resource(request):
 @acquire_token
 def query_resource_by_course(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
-
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     # 检查course_id
     try:
         course_id = int(parameter_dict['course_id'])
         course = Course.objects.get(course_id=course_id)
+        CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    except CourseJoin.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'你还未加入课程'
+        }))
 
     resources = course.resource_set.all()
     resources_list = []

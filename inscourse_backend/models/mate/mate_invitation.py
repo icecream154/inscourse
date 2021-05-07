@@ -1,6 +1,6 @@
 from django.db import models
 
-from inscourse_backend.models.course import Course
+from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.user import User
 
 
@@ -11,11 +11,13 @@ class MateInvitation(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     # 发起者
     requester = models.ForeignKey(User, on_delete=models.CASCADE, related_name='request_user')
-    # 接受者
-    acceptor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='accept_user')
+    # 邀请码
+    invitation_code = models.CharField(max_length=8)
     # 建立时间
     request_time = models.DateTimeField()
-    # 邀请接受状况 0: 等待接受 1: 接受邀请 -1: 拒绝邀请
+    # 邀请描述
+    description = models.CharField(max_length=50)
+    # 邀请接受状况 0: 等待接受 1: 接受邀请
     status = models.IntegerField()
 
     def to_dict(self):
@@ -23,8 +25,9 @@ class MateInvitation(models.Model):
             'invitation_id': self.invitation_id,
             'course': self.course.course_id,
             'requester_id': self.requester.user_id,
-            'acceptor_id': self.acceptor.user_id,
+            'invitation_code': self.invitation_code,
             'request_time': str(self.request_time),
+            'description': self.description,
             'status': self.status
         }
         return dictionary
