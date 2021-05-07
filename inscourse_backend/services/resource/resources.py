@@ -66,7 +66,7 @@ def query_resource_by_course(request):
     resources = course.resource_set.all()
     resources_list = []
     for resource in resources:
-        resources_list.append(resource.to_dict())
+        resources_list.append(resource.to_dict(user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -147,7 +147,7 @@ def query_my_resource_by_course(request):
     resources = course.resource_set.filter(user=user)
     resources_list = []
     for resource in resources:
-        resources_list.append(resource.to_dict())
+        resources_list.append(resource.to_dict(user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -211,7 +211,7 @@ def query_favored_resource(request):
     favors = ResourceFav.objects.filter(resource__course=course, user=user)
     resources_list = []
     for favor in favors:
-        resources_list.append(favor.resource.to_dict())
+        resources_list.append(favor.resource.to_dict(user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -266,12 +266,12 @@ def cancel_resource_prefer(request):
 @acquire_token
 def query_certain_resource(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
-
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     try:
         resource = Resource.objects.get(resource_id=int(parameter_dict['resource_id']))
     except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     return HttpResponse(json.dumps({
-        'resource': resource.to_dict()
+        'resource': resource.to_dict(user)
     }))

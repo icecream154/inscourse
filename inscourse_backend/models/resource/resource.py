@@ -1,6 +1,8 @@
 from django.db import models
 
 from inscourse_backend.models.course.course import Course
+from inscourse_backend.models.resource.resource_fav import ResourceFav
+from inscourse_backend.models.resource.resource_prefer import ResourcePrefer
 from inscourse_backend.models.user import User
 
 
@@ -19,6 +21,10 @@ class Resource(models.Model):
     content_type = models.IntegerField()
     # 资源内容
     content = models.TextField()
+    # 总收藏数
+    favors = models.IntegerField()
+    # 总点赞数
+    prefers = models.IntegerField()
 
     def to_dict(self):
         dictionary = {
@@ -28,8 +34,25 @@ class Resource(models.Model):
             'resource_key': self.resource_key,
             'description': self.description,
             'content_type': self.content_type,
-            'content': self.content
+            'content': self.content,
+            'favors': self.favors,
+            'prefers': self.prefers
         }
         return dictionary
 
     # TODO: 增加 是否收藏，是否点赞， 总收藏数，总点赞数字段
+    def to_dict(self, user: User):
+        dictionary = {
+            'resource_id': self.resource_id,
+            'course_id': self.course.course_id,
+            'user_id': self.user.user_id,
+            'resource_key': self.resource_key,
+            'description': self.description,
+            'content_type': self.content_type,
+            'content': self.content,
+            'favors': self.favors,
+            'prefers': self.prefers,
+            'is_favored': ResourceFav.objects.filter(resource=self, user=user).exists(),
+            'is_preferred': ResourcePrefer.objects.filter(resource=self, user=user).exists()
+        }
+        return dictionary
