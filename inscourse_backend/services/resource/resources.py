@@ -53,8 +53,7 @@ def query_resource_by_course(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
 
     try:
-        course_id = int(parameter_dict['course_id'])
-        course = Course.objects.get(course_id=course_id)
+        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
         CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
@@ -76,7 +75,6 @@ def query_resource_by_course(request):
 def modify_resource(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
 
-    # 检查resource_id
     try:
         resource_id = int(parameter_dict['resource_id'])
         resource = Resource.objects.get(resource_id=resource_id)
