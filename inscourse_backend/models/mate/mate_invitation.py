@@ -17,8 +17,6 @@ class MateInvitation(models.Model):
     request_time = models.DateTimeField()
     # 邀请描述
     description = models.CharField(max_length=50)
-    # 邀请接受状况 0: 等待接受 1: 接受邀请
-    status = models.IntegerField()
 
     def to_dict(self):
         dictionary = {
@@ -27,7 +25,6 @@ class MateInvitation(models.Model):
             'requester_id': self.requester.user_id,
             'invitation_code': self.invitation_code,
             'request_time': str(self.request_time),
-            'description': self.description,
-            'status': self.status
+            'description': self.description
         }
         return dictionary

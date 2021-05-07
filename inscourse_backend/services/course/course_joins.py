@@ -4,6 +4,7 @@ from django.http import *
 
 from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.course.course_join import CourseJoin
+from inscourse_backend.models.user import User
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
@@ -31,12 +32,11 @@ def join_course(request):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    try:
-        CourseJoin.objects.get(user=user, course=course)
+    if is_joined(user, course):
         return HttpResponseForbidden(json.dumps({
             'message': u'你已经加入该课程'
         }))
-    except CourseJoin.DoesNotExist:
+    else:
         CourseJoin(user=user, course=course).save()
         return HttpResponse(json.dumps({
             'message': u'加入课程成功'
@@ -61,3 +61,11 @@ def drop_out_course(request):
         return HttpResponseForbidden(json.dumps({
             'message': u'你还未加入该课程'
         }))
+
+
+def is_joined(user: User, course: Course):
+    try:
+        CourseJoin.objects.get(user=user, course=course)
+        return True
+    except CourseJoin.DoesNotExist:
+        return False

@@ -1,6 +1,7 @@
 from django.db import models
 
 from inscourse_backend.models.user import User
+from inscourse_backend.services.course.course_joins import is_joined
 
 
 class Course(models.Model):
@@ -25,7 +26,7 @@ class Course(models.Model):
     # 课程邀请码
     invitation_code = models.CharField(max_length=8)
 
-    def to_dict(self):
+    def to_dict(self, user: User):
         dictionary = {
             'course_id': self.course_id,
             'author_id': self.author.user_id,
@@ -36,6 +37,7 @@ class Course(models.Model):
             'heat': self.heat,
             'image': self.image,
             'category': self.category,
-            'invitation_code': self.invitation_code
+            'invitation_code': self.invitation_code,
+            'is_joined': is_joined(user, self)
         }
         return dictionary

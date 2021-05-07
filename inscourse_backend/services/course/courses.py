@@ -11,8 +11,23 @@ from inscourse_backend.utils.invitation_code_generator import generate_course_in
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
 
 
+@acquire_token
+def query_certain_course(request):
+    parameter_dict = fetch_parameter_dict(request, 'GET')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    try:
+        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
+    except (KeyError, TypeError, Course.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    return HttpResponse(json.dumps({
+        'course': course.to_dict(user)
+    }))
+
+
+@acquire_token
 def query_open_courses(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     try:
         name = parameter_dict['name']
         category = int(parameter_dict['category'])
@@ -28,7 +43,7 @@ def query_open_courses(request):
     count = Course.objects.filter(name__contains=name, category=category, status=1).count()
     course_list = []
     for course in courses:
-        course_list.append(course.to_dict())
+        course_list.append(course.to_dict(user))
     # 返回成功
     return HttpResponse(json.dumps({
         'count': count,
@@ -68,9 +83,8 @@ def upload_course(request):
 def publish(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
-        course_id = parameter_dict['course_id']
-        course = Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
+        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
+    except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     # 是否为创建者
