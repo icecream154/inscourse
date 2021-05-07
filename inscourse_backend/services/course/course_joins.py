@@ -26,9 +26,8 @@ def query_my_joined_course(request):
 def join_course(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
-        course_id = parameter_dict['course_id']
-        course = Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
+        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
+    except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
@@ -48,9 +47,8 @@ def join_course(request):
 def drop_out_course(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
-        course_id = parameter_dict['course_id']
-        course = Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
+        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
+    except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])

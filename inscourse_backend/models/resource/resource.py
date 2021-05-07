@@ -31,3 +31,5 @@ class Resource(models.Model):
             'content': self.content
         }
         return dictionary
+
+    # TODO: 增加 是否收藏，是否点赞， 总收藏数，总点赞数字段

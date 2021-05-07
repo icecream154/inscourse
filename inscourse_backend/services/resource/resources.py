@@ -51,7 +51,7 @@ def release_resource(request):
 def query_resource_by_course(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查course_id
+
     try:
         course_id = int(parameter_dict['course_id'])
         course = Course.objects.get(course_id=course_id)
@@ -87,7 +87,7 @@ def modify_resource(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     if resource.user.user_id != user.user_id:
         return HttpResponseForbidden(json.dumps({
-            'message': u'对不起，你不是课程资源的创建者'
+            'message': u'你不是发布者'
         }))
 
     # 修改resource
@@ -123,7 +123,7 @@ def delete_resource(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     if resource.user.user_id != user.user_id:
         return HttpResponseForbidden(json.dumps({
-            'message': u'对不起，你不是课程资源的创建者'
+            'message': u'你不是发布者'
         }))
 
     # 删除resource
@@ -137,17 +137,13 @@ def delete_resource(request):
 def query_my_resource_by_course(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查course_id
+
     try:
         course_id = int(parameter_dict['course_id'])
         course = Course.objects.get(course_id=course_id)
-        CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
-    except CourseJoin.DoesNotExist:
-        return HttpResponseBadRequest(json.dumps({
-            'message': u'你还未加入课程'
-        }))
+
     resources = course.resource_set.filter(user=user)
     resources_list = []
     for resource in resources:
@@ -161,16 +157,16 @@ def query_my_resource_by_course(request):
 def resource_fav(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查resource_id
+
     try:
-        resource_id = int(parameter_dict['resource_id'])
-        resource = Resource.objects.get(resource_id=resource_id)
+        resource = Resource.objects.get(resource_id=int(parameter_dict['resource_id']))
     except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
     favors = ResourceFav.objects.filter(resource=resource, user=user)
     if favors.exists():
         return HttpResponseBadRequest(json.dumps({
-            'message': u'您已收藏过该帖'
+            'message': u'你已收藏过该帖'
         }))
     else:
         favor = ResourceFav(
@@ -187,16 +183,15 @@ def resource_fav(request):
 def cancel_resource_fav(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查resource_id
+
     try:
-        resource_id = int(parameter_dict['resource_id'])
-        resource = Resource.objects.get(resource_id=resource_id)
+        resource = Resource.objects.get(resource_id=int(parameter_dict['resource_id']))
         favor = ResourceFav.objects.get(resource=resource, user=user)
     except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     except ResourceFav.DoesNotExist:
         return HttpResponseBadRequest(json.dumps({
-            'message': u'您尚未收藏该帖'
+            'message': u'你尚未收藏该帖'
         }))
     favor.delete()
     return HttpResponse(json.dumps({
@@ -208,17 +203,11 @@ def cancel_resource_fav(request):
 def query_favored_resource(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查course_id
     try:
-        course_id = int(parameter_dict['course_id'])
-        course = Course.objects.get(course_id=course_id)
-        CourseJoin.objects.get(course=course, user=user)
+        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
-    except CourseJoin.DoesNotExist:
-        return HttpResponseBadRequest(json.dumps({
-            'message': u'你还未加入课程'
-        }))
+
     favors = ResourceFav.objects.filter(resource__course=course, user=user)
     resources_list = []
     for favor in favors:
@@ -232,12 +221,11 @@ def query_favored_resource(request):
 def resource_prefer(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查resource_id
     try:
-        resource_id = int(parameter_dict['resource_id'])
-        resource = Resource.objects.get(resource_id=resource_id)
+        resource = Resource.objects.get(resource_id=int(parameter_dict['resource_id']))
     except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
     prefers = ResourcePrefer.objects.filter(resource=resource, user=user)
     if prefers.exists():
         return HttpResponseBadRequest(json.dumps({
@@ -258,10 +246,9 @@ def resource_prefer(request):
 def cancel_resource_prefer(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    # 检查resource_id
+
     try:
-        resource_id = int(parameter_dict['resource_id'])
-        resource = Resource.objects.get(resource_id=resource_id)
+        resource = Resource.objects.get(resource_id=int(parameter_dict['resource_id']))
         prefer = ResourcePrefer.objects.get(resource=resource, user=user)
     except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
@@ -269,6 +256,7 @@ def cancel_resource_prefer(request):
         return HttpResponseBadRequest(json.dumps({
             'message': u'您尚未点赞该帖'
         }))
+
     prefer.delete()
     return HttpResponse(json.dumps({
         'message': u'已取消点赞'
@@ -278,12 +266,12 @@ def cancel_resource_prefer(request):
 @acquire_token
 def query_certain_resource(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
-    # 检查resource_id
+
     try:
-        resource_id = int(parameter_dict['resource_id'])
-        resource = Resource.objects.get(resource_id=resource_id)
+        resource = Resource.objects.get(resource_id=int(parameter_dict['resource_id']))
     except(KeyError, TypeError, Resource.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
     return HttpResponse(json.dumps({
         'resource': resource.to_dict()
     }))
