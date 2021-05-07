@@ -6,7 +6,6 @@ from inscourse_backend.services.sys.users import *
 from inscourse_backend.services.mate.mates import *
 from inscourse_backend.services.assignment.assignments import *
 
-
 urlpatterns = [
     # 用户模块
     path('sys/login', login, name='login'),
@@ -20,13 +19,20 @@ urlpatterns = [
     path('course/uploadCourse', upload_course, name='upload_course'),
     path('course/queryMyCourse', query_my_course, name='query_my_course'),
 
-    # 帖子模块 TODO: 查询某一门课下自己发的帖子
+    # 帖子模块
     path('resource/releaseResource', release_resource, name='release_resource'),
     path('resource/queryResourceByCourse', query_resource_by_course, name='query_resource_by_course'),
     path('resource/modifyResource', modify_resource, name='modify_resource'),
     path('resource/deleteResource', delete_resource, name='delete_resource'),
+    path('resource/queryMyResourceByCourse', query_my_resource_by_course, name='query_my_resource_by_course'),
 
-    # TODO: 帖子的（取消）收藏和（取消）点赞，查看已收藏的帖子
+    # TODO: 帖子的（取消）收藏和（取消）点赞，查看已收藏的帖子,查看某个帖子
+    path('resource/resourceFav', resource_fav, name='resource_fav'),
+    path('resource/cancelResourceFav', cancel_resource_fav, name='cancel_resource_fav'),
+    path('resource/resourcePrefer', resource_prefer, name='resource_prefer'),
+    path('resource/cancelResourcePrefer', cancel_resource_prefer, name='cancel_resource_prefer'),
+    path('resource/queryFavoredResources', query_favored_resource, name='query_favored_resource'),
+    path('resource/queryCertainResource', query_certain_resource, name='query_certain_resource')
 
     # # 课友模块
     # path('mate/queryMyMates', query_my_mates, name='query_my_mates'),

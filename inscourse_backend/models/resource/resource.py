@@ -9,7 +9,7 @@ class Resource(models.Model):
     resource_id = models.AutoField(primary_key=True)
     # 课程ID
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    # 上传用户id
+    # 上传用户
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # 资源名称
     resource_key = models.CharField(max_length=20)

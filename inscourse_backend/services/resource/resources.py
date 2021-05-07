@@ -5,6 +5,8 @@ from django.http import *
 from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.course.course_join import CourseJoin
 from inscourse_backend.models.resource.resource import Resource
+from inscourse_backend.models.resource.resource_fav import ResourceFav
+from inscourse_backend.models.resource.resource_prefer import ResourcePrefer
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
@@ -128,4 +130,160 @@ def delete_resource(request):
     resource.delete()
     return HttpResponse(json.dumps({
         'message': u'删除成功'
+    }))
+
+
+@acquire_token
+def query_my_resource_by_course(request):
+    parameter_dict = fetch_parameter_dict(request, 'GET')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    # 检查course_id
+    try:
+        course_id = int(parameter_dict['course_id'])
+        course = Course.objects.get(course_id=course_id)
+        CourseJoin.objects.get(course=course, user=user)
+    except (KeyError, TypeError, Course.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    except CourseJoin.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'你还未加入课程'
+        }))
+    resources = course.resource_set.filter(user=user)
+    resources_list = []
+    for resource in resources:
+        resources_list.append(resource.to_dict())
+    return HttpResponse(json.dumps({
+        'resources': resources_list
+    }))
+
+
+@acquire_token
+def resource_fav(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    # 检查resource_id
+    try:
+        resource_id = int(parameter_dict['resource_id'])
+        resource = Resource.objects.get(resource_id=resource_id)
+    except(KeyError, TypeError, Resource.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    favors = ResourceFav.objects.filter(resource=resource, user=user)
+    if favors.exists():
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'您已收藏过该帖'
+        }))
+    else:
+        favor = ResourceFav(
+            resource=resource,
+            user=user
+        )
+        favor.save()
+        return HttpResponse(json.dumps({
+            'message': u'收藏成功'
+        }))
+
+
+@acquire_token
+def cancel_resource_fav(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    # 检查resource_id
+    try:
+        resource_id = int(parameter_dict['resource_id'])
+        resource = Resource.objects.get(resource_id=resource_id)
+        favor = ResourceFav.objects.get(resource=resource, user=user)
+    except(KeyError, TypeError, Resource.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    except ResourceFav.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'您尚未收藏该帖'
+        }))
+    favor.delete()
+    return HttpResponse(json.dumps({
+        'message': u'取消收藏成功'
+    }))
+
+
+@acquire_token
+def query_favored_resource(request):
+    parameter_dict = fetch_parameter_dict(request, 'GET')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    # 检查course_id
+    try:
+        course_id = int(parameter_dict['course_id'])
+        course = Course.objects.get(course_id=course_id)
+        CourseJoin.objects.get(course=course, user=user)
+    except (KeyError, TypeError, Course.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    except CourseJoin.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'你还未加入课程'
+        }))
+    favors = ResourceFav.objects.filter(resource__course=course, user=user)
+    resources_list = []
+    for favor in favors:
+        resources_list.append(favor.resource.to_dict())
+    return HttpResponse(json.dumps({
+        'resources': resources_list
+    }))
+
+
+@acquire_token
+def resource_prefer(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    # 检查resource_id
+    try:
+        resource_id = int(parameter_dict['resource_id'])
+        resource = Resource.objects.get(resource_id=resource_id)
+    except(KeyError, TypeError, Resource.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    prefers = ResourcePrefer.objects.filter(resource=resource, user=user)
+    if prefers.exists():
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'您已点赞过该帖'
+        }))
+    else:
+        prefer = ResourcePrefer(
+            resource=resource,
+            user=user
+        )
+        prefer.save()
+        return HttpResponse(json.dumps({
+            'message': u'点赞成功'
+        }))
+
+
+@acquire_token
+def cancel_resource_prefer(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    # 检查resource_id
+    try:
+        resource_id = int(parameter_dict['resource_id'])
+        resource = Resource.objects.get(resource_id=resource_id)
+        prefer = ResourcePrefer.objects.get(resource=resource, user=user)
+    except(KeyError, TypeError, Resource.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    except ResourcePrefer.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({
+            'message': u'您尚未点赞该帖'
+        }))
+    prefer.delete()
+    return HttpResponse(json.dumps({
+        'message': u'已取消点赞'
+    }))
+
+
+@acquire_token
+def query_certain_resource(request):
+    parameter_dict = fetch_parameter_dict(request, 'GET')
+    # 检查resource_id
+    try:
+        resource_id = int(parameter_dict['resource_id'])
+        resource = Resource.objects.get(resource_id=resource_id)
+    except(KeyError, TypeError, Resource.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+    return HttpResponse(json.dumps({
+        'resource': resource.to_dict()
     }))
