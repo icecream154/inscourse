@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CourseJoin',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('uid', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.course')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inscourse_backend.user')),
             ],

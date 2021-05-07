@@ -23,7 +23,7 @@ class Course(models.Model):
     # 课程大类
     category = models.IntegerField()
     # 课程邀请码
-    invitation_code = models.CharField(max_length=6)
+    invitation_code = models.CharField(max_length=8)
 
     def to_dict(self):
         dictionary = {

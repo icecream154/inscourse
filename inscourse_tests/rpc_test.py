@@ -10,7 +10,7 @@ if __name__ == '__main__':
     # 系统模块测试
     # ---------------------------------------------------------
     show_separate_line()
-    status_code, response_dict = sys_admin_login('test-id-001', 'test-user1')
+    status_code, response_dict = sys_admin_login('test-uid-001', 'test-user1')
     show_info(status_code, response_dict)
     # user 1
     user1_token = response_dict['token']
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     show_info(status_code, response_dict)
     user1_user_id = response_dict['user']['user_id']
 
-    status_code, response_dict = sys_admin_login('test-id-002', 'test-user2')
+    status_code, response_dict = sys_admin_login('test-uid-002', 'test-user2')
     show_info(status_code, response_dict)
     # user 2
     user2_token = response_dict['token']
