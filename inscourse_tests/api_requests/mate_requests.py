@@ -17,26 +17,43 @@ def mate_query_by_course(token: str, course_id: int, is_rpc=True):
     })
 
 
-def mate_invite(token: str, course_id: int, accept_id: int, is_rpc=True):
+def mate_query_course_invitations(token: str, course_id: int, is_rpc=True):
+    if is_rpc:
+        return do_rpc_get_request('mate/queryCourseMateInvitations', headers={TOKEN_HEADER_KEY: token}, params={
+            'course_id': course_id
+        })
+    return do_get_request('mate/queryCourseMateInvitations', headers={TOKEN_HEADER_KEY: token}, params={
+        'course_id': course_id
+    })
+
+
+def mate_invite(token: str, course_id: int, description: str, is_rpc=True):
     if is_rpc:
         return do_rpc_post_request('mate/inviteMate', headers={TOKEN_HEADER_KEY: token}, data={
             'course_id': course_id,
-            'accept_id': accept_id
+            'description': description
         })
     return do_post_request('mate/inviteMate', headers={TOKEN_HEADER_KEY: token}, data={
         'course_id': course_id,
-        'accept_id': accept_id
+        'description': description
     })
 
 
-def mate_deal_invitation(token: str, invitation_id: int, status: int, is_rpc=True):
+def mate_accept_invitation(token: str, invitation_code: str, is_rpc=True):
     if is_rpc:
-        return do_rpc_post_request('mate/dealMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
-            'invitation_id': invitation_id,
-            'status': status
+        return do_rpc_post_request('mate/acceptMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
+            'invitation_code': invitation_code
         })
-    return do_post_request('mate/dealMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
-        'invitation_id': invitation_id,
-        'status': status
+    return do_post_request('mate/acceptMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
+        'invitation_code': invitation_code
     })
 
+
+def mate_cancel_invitation(token: str, invitation_id: int, is_rpc=True):
+    if is_rpc:
+        return do_rpc_post_request('mate/cancelMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
+            'invitation_id': invitation_id
+        })
+    return do_post_request('mate/cancelMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
+        'invitation_id': invitation_id
+    })

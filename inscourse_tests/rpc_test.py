@@ -2,7 +2,7 @@ from inscourse_tests.api_requests.sys_requests import *
 from inscourse_tests.api_requests.course_requests import *
 from inscourse_tests.api_requests.resource_requests import *
 from inscourse_tests.api_requests.mate_requests import *
-from inscourse_tests.api_requests.schedule_requests import *
+from inscourse_tests.api_requests.assignment_requests import *
 from inscourse_tests.rpc_utils import *
 
 # 数据库初始化脚本
