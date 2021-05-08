@@ -47,3 +47,22 @@ def query_my_mate_by_course(request):
         return HttpResponseNotFound(json.dumps({
             'message': u'你还没有课友'
         }))
+
+
+@acquire_token
+def unbind_mate(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    try:
+        mate = Mate.objects.get(mate_id=int(parameter_dict['mate_id']))
+    except (KeyError, TypeError, Mate.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
+    if mate.requester != user and mate.acceptor != user:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'无权操作'
+        }))
+
+    return HttpResponse(json.dumps({
+        'message': u'课友关系解除成功'
+    }))

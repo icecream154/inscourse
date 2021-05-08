@@ -1,9 +1,12 @@
 import json
 
+from django.db.models import Q
 from django.http import *
 
 from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.course.course_join import CourseJoin
+from inscourse_backend.models.mate.mate import Mate
+from inscourse_backend.models.mate.mate_invitation import MateInvitation
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
 from inscourse_backend.services.course.course_dict import is_joined
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
@@ -58,6 +61,18 @@ def drop_out_course(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     try:
         CourseJoin.objects.get(user=user, course=course).delete()
+        # 如果已经建立了课友关系那么需要先解除关系才能退出课程
+        if Mate.objects.filter(Q(course=course), Q(requester=user) | Q(acceptor=user)).exists():
+            return HttpResponseForbidden(json.dumps({
+                'message': u'退出课程失败，请先解除课友关系'
+            }))
+
+        # 如果有公开未被接受的邀请，退课前删除邀请即可
+        try:
+            MateInvitation.objects.get(course=course, requester=user).delete()
+        except MateInvitation.DoesNotExist:
+            pass
+
         return HttpResponse(json.dumps({
             'message': u'退出课程成功'
         }))

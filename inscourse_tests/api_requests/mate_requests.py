@@ -57,3 +57,13 @@ def mate_cancel_invitation(token: str, invitation_id: int, is_rpc=True):
     return do_post_request('mate/cancelMateInvitation', headers={TOKEN_HEADER_KEY: token}, data={
         'invitation_id': invitation_id
     })
+
+
+def mate_unbind(token: str, mate_id: int, is_rpc=True):
+    if is_rpc:
+        return do_rpc_post_request('mate/unbind', headers={TOKEN_HEADER_KEY: token}, data={
+            'mate_id': mate_id
+        })
+    return do_post_request('mate/unbind', headers={TOKEN_HEADER_KEY: token}, data={
+        'mate_id': mate_id
+    })

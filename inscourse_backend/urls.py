@@ -41,6 +41,7 @@ urlpatterns = [
     # 课友模块
     path('mate/queryMyMates', query_my_mates, name='query_my_mates'),
     path('mate/queryMyMateByCourse', query_my_mate_by_course, name='query_my_mate_by_course'),
+    path('mate/unbind', unbind_mate, name='unbind_mate'),
 
     # 课友邀请部分
     path('mate/queryCourseMateInvitations', query_course_mate_invitations, name='query_course_mate_invitations'),
