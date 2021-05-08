@@ -228,7 +228,7 @@ def resource_prefer(request):
     prefers = ResourcePrefer.objects.filter(resource=resource, user=user)
     if prefers.exists():
         return HttpResponseBadRequest(json.dumps({
-            'message': u'您已点赞过该帖'
+            'message': u'你已点赞过该帖'
         }))
     else:
         prefer = ResourcePrefer(
@@ -253,7 +253,7 @@ def cancel_resource_prefer(request):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
     except ResourcePrefer.DoesNotExist:
         return HttpResponseBadRequest(json.dumps({
-            'message': u'您尚未点赞该帖'
+            'message': u'你尚未点赞该帖'
         }))
 
     prefer.delete()

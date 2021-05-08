@@ -5,9 +5,11 @@ from django.http import *
 from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.course.course_join import CourseJoin
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
+from inscourse_backend.services.course.course_dict import is_joined
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
+from inscourse_backend.utils.invitation_code_generator import *
 
 
 @acquire_token
@@ -26,8 +28,11 @@ def query_my_joined_course(request):
 def join_course(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
-        course = Course.objects.get(course_id=int(parameter_dict['course_id']))
-    except (KeyError, TypeError, Course.DoesNotExist):
+        course_id = decode_course_id_from_code(parameter_dict['invitation_code'])
+        if course_id == -1:
+            return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+        course = Course.objects.get(course_id=course_id)
+    except (KeyError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])

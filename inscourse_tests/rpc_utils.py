@@ -10,8 +10,8 @@ def show_separate_line():
     print('---------------------------------------------------------')
 
 
-def show_info(status_code: int, response_dict: dict):
-    print('status_code[%d] and response: [%s]' % (status_code, response_dict))
+def show_info(index: int, status_code: int, response_dict: dict):
+    print('[%d]: status_code[%d] and response: [%s]' % (index, status_code, response_dict))
 
 
 def do_rpc_request(request_type: str, url: str, params: dict = None, headers: dict = None, data: dict = None):

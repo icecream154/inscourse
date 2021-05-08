@@ -20,9 +20,9 @@ class Resource(models.Model):
     # 资源内容
     content = models.TextField()
     # 总收藏数
-    favors = models.IntegerField()
+    favors = models.IntegerField(default=0)
     # 总点赞数
-    prefers = models.IntegerField()
+    prefers = models.IntegerField(default=0)
 
     def to_dict(self):
         dictionary = {

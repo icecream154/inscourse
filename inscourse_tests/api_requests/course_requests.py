@@ -58,13 +58,13 @@ def course_query_my_joined_course(token: str, is_rpc=True):
     return do_get_request('course/queryMyJoinedCourse', headers={TOKEN_HEADER_KEY: token})
 
 
-def course_join(token: str, course_id: int, is_rpc=True):
+def course_join(token: str, invitation_code: int, is_rpc=True):
     if is_rpc:
         return do_rpc_post_request('course/joinCourse', headers={TOKEN_HEADER_KEY: token}, data={
-            'course_id': course_id
+            'invitation_code': invitation_code
         })
     return do_post_request('course/joinCourse', headers={TOKEN_HEADER_KEY: token}, data={
-        'course_id': course_id
+        'invitation_code': invitation_code
     })
 
 

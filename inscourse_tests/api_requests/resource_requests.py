@@ -61,19 +61,12 @@ def resource_delete(token: str, resource_id: int, is_rpc=True):
 
 def resource_query_mine_by_course(token: str, course_id: int, is_rpc=True):
     if is_rpc:
-        return do_rpc_get_request('resource/queryMyResourceByCourse', headers={TOKEN_HEADER_KEY: token}, data={
+        return do_rpc_get_request('resource/queryMyResourceByCourse', headers={TOKEN_HEADER_KEY: token}, params={
             'course_id': course_id
         })
-    return do_get_request('resource/queryMyResourceByCourse', headers={TOKEN_HEADER_KEY: token}, data={
+    return do_get_request('resource/queryMyResourceByCourse', headers={TOKEN_HEADER_KEY: token}, params={
         'course_id': course_id
     })
-
-#     path('resource/resourceFav', resource_fav, name='resource_fav'),
-#     path('resource/cancelResourceFav', cancel_resource_fav, name='cancel_resource_fav'),
-#     path('resource/resourcePrefer', resource_prefer, name='resource_prefer'),
-#     path('resource/cancelResourcePrefer', cancel_resource_prefer, name='cancel_resource_prefer'),
-#     path('resource/queryFavoredResources', query_favored_resource, name='query_favored_resource'),
-#     path('resource/queryCertainResource', query_certain_resource, name='query_certain_resource'),
 
 
 def resource_fav(token: str, resource_id: int, is_rpc=True):
