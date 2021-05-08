@@ -182,99 +182,104 @@ if __name__ == '__main__':
     status_code, response_dict = resource_query_by_course(user2_token, c_course_id)
     show_info(15, status_code, response_dict)
 
-    #
-    # # 课友模块测试
-    # # ---------------------------------------------------------
-    # show_separate_line()
-    # # user 2 查询所有课友，无课友
-    # status_code, response_dict = mate_query_all(user2_token)
-    # show_info(status_code, response_dict)
-    #
-    # # user 2 给 user 2 自己发送 java 课程邀请，失败
-    # status_code, response_dict = mate_invite(user2_token, java_course_id, user2_user_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user 2 给 user 1 发送 java 课程邀请，成功
-    # status_code, response_dict = mate_invite(user2_token, java_course_id, user1_user_id)
-    # show_info(status_code, response_dict)
-    # invitation_id = response_dict['invitation_id']
-    #
-    # # user 2 给 user 1 再次发送 java 课程邀请，已有邀请，失败
-    # status_code, response_dict = mate_invite(user2_token, java_course_id, user1_user_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user 1 给 user 2 再次发送 java 课程邀请，已有邀请，失败
-    # status_code, response_dict = mate_invite(user1_token, java_course_id, user2_user_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user 2 试图同意邀请，无权操作，失败
-    # status_code, response_dict = mate_deal_invitation(user2_token, invitation_id, 1)
-    # show_info(status_code, response_dict)
-    #
-    # # user 1 拒绝邀请，成功
-    # status_code, response_dict = mate_deal_invitation(user1_token, invitation_id, -1)
-    # show_info(status_code, response_dict)
-    #
-    # # user 1 重新给 user 2 发送 java 课程邀请，成功
-    # status_code, response_dict = mate_invite(user1_token, java_course_id, user2_user_id)
-    # show_info(status_code, response_dict)
-    # invitation_id = response_dict['invitation_id']
-    #
-    # # user 2 同意邀请，成功
-    # status_code, response_dict = mate_deal_invitation(user2_token, invitation_id, 1)
-    # show_info(status_code, response_dict)
-    #
-    # # user 2 给 user 1 再次发送 java 课程邀请，已经建立课友关系，失败
-    # status_code, response_dict = mate_invite(user2_token, java_course_id, user1_user_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user 2 查询所有课友，有 java 课友 user 1
-    # status_code, response_dict = mate_query_all(user2_token)
-    # show_info(status_code, response_dict)
-    # java_mate_id = response_dict['mates'][0]['mate_id']
-    #
-    # # user 2 查询 java 课友，有 user1
-    # status_code, response_dict = mate_query_by_course(user2_token, java_course_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user 2 查询 c 课友，无结果
-    # status_code, response_dict = mate_query_by_course(user2_token, c_course_id)
-    # show_info(status_code, response_dict)
-    #
-    # # 日程模块测试
-    # # ---------------------------------------------------------
-    # show_separate_line()
-    #
-    # # user2 新建 Chapter 1 日程
-    # status_code, response_dict = schedule_new(user2_token, java_mate_id, 'Chapter 1', '2021-05-10')
-    # show_info(status_code, response_dict)
-    # java_chapter1_schedule_id = response_dict['assignment_id']
-    #
-    # # user1 新建 Chapter 2 日程
-    # status_code, response_dict = schedule_new(user1_token, java_mate_id, 'Chapter 2', '2021-05-12')
-    # show_info(status_code, response_dict)
-    # java_chapter2_schedule_id = response_dict['assignment_id']
-    #
-    # # user1 查询日程
-    # status_code, response_dict = schedule_query_by_mate(user1_token, java_mate_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user1 修改 Chapter 1 日程
-    # status_code, response_dict = schedule_modify(user1_token, java_chapter1_schedule_id, 'New Chapter 1', '2021-05-11')
-    # show_info(status_code, response_dict)
-    #
-    # # user2 修改 Chapter 2 日程
-    # status_code, response_dict = schedule_modify(user1_token, java_chapter2_schedule_id, 'New Chapter 2', '2021-05-13')
-    # show_info(status_code, response_dict)
-    #
-    # # user2 查询日程
-    # status_code, response_dict = schedule_query_by_mate(user2_token, java_mate_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user2 删除 Chapter 2 日程
-    # status_code, response_dict = schedule_delete(user2_token, java_chapter2_schedule_id)
-    # show_info(status_code, response_dict)
-    #
-    # # user1 查询日程
-    # status_code, response_dict = schedule_query_by_mate(user1_token, java_mate_id)
-    # show_info(status_code, response_dict)
+    # 课友模块测试
+    # ---------------------------------------------------------
+    show_separate_line()
+    # user 2 查询所有课友，无课友
+    status_code, response_dict = mate_query_all(user2_token)
+    show_info(1, status_code, response_dict)
+
+    # user 2 发送 java 课程邀请
+    status_code, response_dict = mate_invite(user2_token, java_course_id, '求求大佬带我学java')
+    show_info(2, status_code, response_dict)
+    java_mate_invitation_code = response_dict['invitation_code']
+
+    # user 2 再次发送 java 课程邀请， 失败
+    status_code, response_dict = mate_invite(user2_token, java_course_id, '求求大佬带我学java')
+    show_info(3, status_code, response_dict)
+
+    # user2 接受自己的邀请，失败
+    status_code, response_dict = mate_accept_invitation(user2_token, java_mate_invitation_code)
+    show_info(4, status_code, response_dict)
+
+    # user 1 查询java课程下邀请
+    status_code, response_dict = mate_query_by_course(user1_token, java_course_id)
+    show_info(5, status_code, response_dict)
+    java_mate_id = response_dict['mate']['mate_id']
+
+    # user 2 查询c++课程下邀请, 空
+    status_code, response_dict = mate_query_by_course(user2_token, c_plus_plus_course_id)
+    show_info(6, status_code, response_dict)
+
+    # user1接受user2的邀请，成功
+    status_code, response_dict = mate_accept_invitation(user1_token, java_mate_invitation_code)
+    show_info(7, status_code, response_dict)
+
+    # user 2 查询所有课友，课友user 1
+    status_code, response_dict = mate_query_all(user2_token)
+    show_info(8, status_code, response_dict)
+
+    # user 2 查询java 课友 ， user 1
+    status_code, response_dict = mate_query_by_course(user2_token, java_course_id)
+    show_info(9, status_code, response_dict)
+
+    # user 2 查询c++ 课友， 无
+    status_code, response_dict = mate_query_by_course(user2_token, c_plus_plus_course_id)
+    show_info(10, status_code, response_dict)
+
+    # user 2 发送 c++ 课程邀请
+    status_code, response_dict = mate_invite(user2_token, c_plus_plus_course_id, '求求大佬带我学 c++')
+    show_info(11, status_code, response_dict)
+    c_plus_plus_course_invitation_id = response_dict['invitation_id']
+
+    # user 1 取消c++课程邀请，失败
+    status_code, response_dict = mate_cancel_invitation(user1_token, c_plus_plus_course_invitation_id)
+    show_info(12, status_code, response_dict)
+
+    # user 2 取消c++课程邀请，成功
+    status_code, response_dict = mate_cancel_invitation(user2_token, c_plus_plus_course_invitation_id)
+    show_info(13, status_code, response_dict)
+
+    # user 2 解除java课友关系，成功
+    status_code, response_dict = mate_unbind(user2_token, java_mate_id)
+    show_info(14, status_code, response_dict)
+
+    # 日程模块测试
+    # ---------------------------------------------------------
+    show_separate_line()
+
+    # user2 新建 Chapter 1 日程
+    status_code, response_dict = assignment_new(user2_token, java_mate_id, 'Chapter 1', '2021-05-10')
+    show_info(status_code, response_dict)
+    java_chapter1_schedule_id = response_dict['assignment_id']
+
+    # user1 新建 Chapter 2 日程
+    status_code, response_dict = assignment_new(user1_token, java_mate_id, 'Chapter 2', '2021-05-12')
+    show_info(status_code, response_dict)
+    java_chapter2_schedule_id = response_dict['assignment_id']
+
+    # user1 查询日程
+    status_code, response_dict = assignment_query_by_mate(user1_token, java_mate_id)
+    show_info(status_code, response_dict)
+
+    # user1 修改 Chapter 1 日程
+    status_code, response_dict = assignment_modify(user1_token, java_chapter1_schedule_id, 'New Chapter 1',
+                                                   '2021-05-11')
+    show_info(status_code, response_dict)
+
+    # user2 修改 Chapter 2 日程
+    status_code, response_dict = assignment_modify(user2_token, java_chapter2_schedule_id, 'New Chapter 2',
+                                                   '2021-05-13')
+    show_info(status_code, response_dict)
+
+    # user2 查询日程
+    status_code, response_dict = assignment_query_by_mate(user2_token, java_mate_id)
+    show_info(status_code, response_dict)
+
+    # user2 删除 Chapter 2 日程
+    status_code, response_dict = assignment_delete(user2_token, java_chapter2_schedule_id)
+    show_info(status_code, response_dict)
+
+    # user1 查询日程
+    status_code, response_dict = assignment_query_by_mate(user1_token, java_mate_id)
+    show_info(status_code, response_dict)
