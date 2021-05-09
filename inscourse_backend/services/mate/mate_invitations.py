@@ -64,7 +64,6 @@ def invite_mate(request):
                 course=course,
                 requester=user,
                 invitation_code='#',
-                status=0,
                 request_time=datetime.datetime.now(),
                 description=description
             )

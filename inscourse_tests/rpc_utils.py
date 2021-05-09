@@ -2,7 +2,7 @@ import requests
 import json
 from django.test import Client
 
-BST_BASE_URL = 'http://localhost:8000/api/'
+BST_BASE_URL = 'http://localhost:8001/api/'
 TOKEN_HEADER_KEY = 'Token'
 
 
