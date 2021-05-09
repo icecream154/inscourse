@@ -9,10 +9,10 @@ def mate_query_all(token: str, is_rpc=True):
 
 def mate_query_by_course(token: str, course_id: int, is_rpc=True):
     if is_rpc:
-        return do_rpc_get_request('mate/queryMyMatesByCourse', headers={TOKEN_HEADER_KEY: token}, params={
+        return do_rpc_get_request('mate/queryMyMateByCourse', headers={TOKEN_HEADER_KEY: token}, params={
             'course_id': course_id
         })
-    return do_get_request('mate/queryMyMatesByCourse', headers={TOKEN_HEADER_KEY: token}, params={
+    return do_get_request('mate/queryMyMateByCourse', headers={TOKEN_HEADER_KEY: token}, params={
         'course_id': course_id
     })
 

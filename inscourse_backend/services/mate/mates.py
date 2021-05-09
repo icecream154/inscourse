@@ -44,7 +44,7 @@ def query_my_mate_by_course(request):
             'mate': mate.to_dict()
         }))
     except Mate.DoesNotExist:
-        return HttpResponseNotFound(json.dumps({
+        return HttpResponseBadRequest(json.dumps({
             'message': u'你还没有课友'
         }))
 
@@ -63,6 +63,7 @@ def unbind_mate(request):
             'message': u'无权操作'
         }))
 
+    mate.delete()
     return HttpResponse(json.dumps({
         'message': u'课友关系解除成功'
     }))

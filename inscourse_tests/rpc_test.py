@@ -224,7 +224,7 @@ if __name__ == '__main__':
     show_info(8, status_code, response_dict)
 
     # user 2 查询 c 课友 ， user 1
-    status_code, response_dict = mate_query_by_course(user2_token, c_course_id)
+    status_code, response_dict = mate_query_by_course(user1_token, c_course_id)
     show_info(9, status_code, response_dict)
     c_mate_id = response_dict['mate']['mate_id']
 
@@ -245,9 +245,23 @@ if __name__ == '__main__':
     status_code, response_dict = mate_cancel_invitation(user2_token, c_plus_plus_course_invitation_id)
     show_info(13, status_code, response_dict)
 
-    # user 2 解除 c 课友关系，成功
-    status_code, response_dict = mate_unbind(user2_token, c_mate_id)
+    # user 2 发送 java 课程邀请
+    status_code, response_dict = mate_invite(user2_token, java_course_id, '求求大佬带我学 java')
     show_info(14, status_code, response_dict)
+    java_mate_invitation_code = response_dict['invitation_code']
+
+    # user 1 接受 user 2 的邀请，成功
+    status_code, response_dict = mate_accept_invitation(user1_token, java_mate_invitation_code)
+    show_info(15, status_code, response_dict)
+
+    # user 2 查询 java 课友 ， user 1
+    status_code, response_dict = mate_query_by_course(user1_token, java_course_id)
+    show_info(16, status_code, response_dict)
+    java_mate_id = response_dict['mate']['mate_id']
+
+    # user 2 解除 java 课友关系，成功
+    status_code, response_dict = mate_unbind(user2_token, java_mate_id)
+    show_info(17, status_code, response_dict)
 
     # 日程模块测试
     # ---------------------------------------------------------
