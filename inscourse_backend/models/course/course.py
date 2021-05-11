@@ -12,14 +12,14 @@ class Course(models.Model):
     status = models.IntegerField()
     # 课程名
     name = models.CharField(max_length=20)
+    # 课程简称
+    short_name = models.CharField(max_length=10)
     # 课程简介
     description = models.CharField(max_length=255)
     # 课程评价
     level = models.IntegerField()
     # 课程热度
     heat = models.IntegerField()
-    # 课程图标
-    image = models.CharField(max_length=255, null=True)
     # 课程大类
     category = models.IntegerField()
     # 课程邀请码
@@ -31,10 +31,10 @@ class Course(models.Model):
             'author_id': self.author.user_id,
             'status': self.status,
             'name': self.name,
+            'short_name': self.short_name,
             'description': self.description,
             'level': self.level,
             'heat': self.heat,
-            'image': self.image,
             'category': self.category,
             'invitation_code': self.invitation_code,
         }

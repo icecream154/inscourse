@@ -33,13 +33,13 @@ if __name__ == '__main__':
     # ---------------------------------------------------------
     show_separate_line()
     # course 1: Java
-    status_code, response_dict = course_upload(user1_token, 'Java Programming', 'This is a course that teaches you how'
-                                                                                'to write programs in java.', 1)
+    status_code, response_dict = course_upload(user1_token, 'Java', 'Java', 'This is a course that teaches you how'
+                                                                    'to write programs in java.', 1)
     show_info(1, status_code, response_dict)
     java_course_id = response_dict['course_id']
 
     # course 2: C
-    status_code, response_dict = course_upload(user2_token, 'C Programming', 'You may want to learn C here.', 1)
+    status_code, response_dict = course_upload(user2_token, 'C', 'C', 'You may want to learn C here.', 1)
     show_info(2, status_code, response_dict)
     c_course_id = response_dict['course_id']
 
@@ -60,9 +60,27 @@ if __name__ == '__main__':
     show_info(6, status_code, response_dict)
 
     # course 3: C++
-    status_code, response_dict = course_upload(user2_token, 'C++ Programming', 'C++ is just dark magic.', 1)
+    status_code, response_dict = course_upload(user2_token, 'C++ Programming', 'C++', 'C++ is just dark magic.', 1)
     show_info(7, status_code, response_dict)
     c_plus_plus_course_id = response_dict['course_id']
+
+    # course 4: Go
+    status_code, response_dict = course_upload(user2_token, 'Go', 'Go', 'Go is an amazing language developed by Google.', 1)
+    show_info(7, status_code, response_dict)
+    go_course_id = response_dict['course_id']
+    status_code, response_dict = course_publish(user2_token, go_course_id)
+
+    # course 5: Perl
+    status_code, response_dict = course_upload(user2_token, 'Perl', 'Perl', 'Perl is a language often used on Linux.', 1)
+    show_info(7, status_code, response_dict)
+    perl_course_id = response_dict['course_id']
+    status_code, response_dict = course_publish(user2_token, perl_course_id)
+
+    # course 6: Ruby
+    status_code, response_dict = course_upload(user2_token, 'Ruby', 'Ruby', 'Ruby is a language often used on Linux.', 1)
+    show_info(7, status_code, response_dict)
+    ruby_course_id = response_dict['course_id']
+    status_code, response_dict = course_publish(user2_token, ruby_course_id)
 
     # 目前 user1 有一个java课程，已公开， user2 有两个课程, c 公开了， c++ 未公开
 
@@ -217,7 +235,6 @@ if __name__ == '__main__':
     # user 1 接受 user 2 的邀请，成功
     status_code, response_dict = mate_accept_invitation(user1_token, c_mate_invitation_code)
     show_info(7, status_code, response_dict)
-
 
     # user 2 查询所有课友，课友user 1
     status_code, response_dict = mate_query_all(user2_token)

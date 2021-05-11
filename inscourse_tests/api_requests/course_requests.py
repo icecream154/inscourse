@@ -28,15 +28,17 @@ def course_query_open_courses(token: str, name: str, category: int, order_by: st
     })
 
 
-def course_upload(token: str, name: str, description: str, category: int, is_rpc=True):
+def course_upload(token: str, name: str, short_name: str, description: str, category: int, is_rpc=True):
     if is_rpc:
         return do_rpc_post_request('course/uploadCourse', headers={TOKEN_HEADER_KEY: token}, data={
             'name': name,
+            'short_name': short_name,
             'description': description,
             'category': category
         })
     return do_post_request('course/uploadCourse', headers={TOKEN_HEADER_KEY: token}, data={
         'name': name,
+        'short_name': short_name,
         'description': description,
         'category': category
     })

@@ -23,6 +23,7 @@ urlpatterns = [
     path('course/queryMyJoinedCourse', query_my_joined_course, name='query_my_joined_course'),
     path('course/joinCourse', join_course, name='join_course'),
     path('course/dropOutCourse', drop_out_course, name='drop_out_course'),
+    path('course/getCourseIcon', get_course_icon, name='get_course_icon'),
 
     # 帖子模块
     path('resource/releaseResource', release_resource, name='release_resource'),
