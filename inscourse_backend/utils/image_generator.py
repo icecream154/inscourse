@@ -4,16 +4,33 @@ import random
 
 from project_config import PROJECT_ROOT
 
-back_color = [
-    (234, 34, 23),
-    (54, 241, 224),
-    (227, 235, 81),
-    (108, 235, 169),
-    (235, 35, 205),
+
+def _hex_color_to_rgb_tuple(hex_color: str) -> tuple:
+    r = int(hex_color[1:3], 16)
+    g = int(hex_color[3:5], 16)
+    b = int(hex_color[5:7], 16)
+    return r, g, b
+
+
+RED = (234, 34, 23)
+WHITE = (255, 255, 255)
+LIGHT_BLUE = (54, 241, 224)
+GRASS_GREEN = (108, 235, 169)
+PURPLE = (235, 35, 205)
+
+COLOR_SCHEMA_POOL = [
+    (RED, WHITE),
+    (LIGHT_BLUE, WHITE),
+    (GRASS_GREEN, WHITE),
+    (PURPLE, WHITE),
     (235, 130, 81),
     (141, 133, 235),
     (111, 53, 235)
 ]
+
+
+def fetch_color_schema(course_id: int):
+    return COLOR_SCHEMA_POOL[0]
 
 
 # 生成简介图片
@@ -106,7 +123,7 @@ if __name__ == '__main__':
     ]
 
     for i in range(len(en_words)):
-        generate_icon(en_words[i], 'en', back_color[0], (255, 255, 255), './images/' + en_words[i] + '.png')
+        generate_icon(en_words[i], 'en', RED, (255, 255, 255), './images/' + en_words[i] + '.png')
 
     zh_words = [
         u'雪',
@@ -116,4 +133,4 @@ if __name__ == '__main__':
     ]
 
     for i in range(len(zh_words)):
-        generate_icon(zh_words[i], 'zh', back_color[0], (255, 255, 255), './images/' + zh_words[i] + '.png')
+        generate_icon(zh_words[i], 'zh', RED, (255, 255, 255), './images/' + zh_words[i] + '.png')

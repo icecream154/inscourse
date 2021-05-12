@@ -8,7 +8,7 @@ from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETER
 from inscourse_backend.services.course.course_dict import to_course_dict
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
-from inscourse_backend.utils.image_generator import generate_icon
+from inscourse_backend.utils.image_generator import generate_icon, fetch_color_schema
 from inscourse_backend.utils.invitation_code_generator import generate_course_invitation_code
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
 from project_config import PROJECT_ROOT
@@ -89,7 +89,9 @@ def upload_course(request):
     course.save()
     CourseJoin(user=user, course=course).save()
 
-    generate_icon(short_name, short_name_language, (234, 34, 23), (255, 255, 255),
+    background_color, font_color = fetch_color_schema(course.course_id)
+
+    generate_icon(short_name, short_name_language, background_color, font_color,
                   PROJECT_ROOT + '/inscourse_backend/assets/images/short_name_icon_' + str(course.course_id) + '.png')
 
     return HttpResponse(json.dumps({
