@@ -20,13 +20,15 @@ def resource_release(token: str, course_id: int, resource_key: str,
     })
 
 
-def resource_query_by_course(token: str, course_id: int, is_rpc=True):
+def resource_query_by_course(token: str, course_id: int, content_type: int = -1, is_rpc=True):
     if is_rpc:
         return do_rpc_get_request('resource/queryResourceByCourse', headers={TOKEN_HEADER_KEY: token}, params={
-            'course_id': course_id
+            'course_id': course_id,
+            'content_type': content_type
         })
     return do_get_request('resource/queryResourceByCourse', headers={TOKEN_HEADER_KEY: token}, params={
-        'course_id': course_id
+        'course_id': course_id,
+        'content_type': content_type
     })
 
 

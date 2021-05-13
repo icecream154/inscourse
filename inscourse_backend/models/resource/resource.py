@@ -15,7 +15,7 @@ class Resource(models.Model):
     resource_key = models.CharField(max_length=20)
     # 资源介绍
     description = models.CharField(max_length=255)
-    # 资源类别
+    # 资源类别 0->text, 1->video, 2->pdf
     content_type = models.IntegerField()
     # 资源内容
     content = models.TextField()
