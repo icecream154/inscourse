@@ -17,20 +17,24 @@ WHITE = (255, 255, 255)
 LIGHT_BLUE = (54, 241, 224)
 GRASS_GREEN = (108, 235, 169)
 PURPLE = (235, 35, 205)
+LIGHT_ORANGE = (235, 130, 81)
+LIGHT_PURPLE = (141, 133, 235)
+BRIGHT_BLUE = (111, 53, 235)
+
 
 COLOR_SCHEMA_POOL = [
     (RED, WHITE),
     (LIGHT_BLUE, WHITE),
     (GRASS_GREEN, WHITE),
     (PURPLE, WHITE),
-    (235, 130, 81),
-    (141, 133, 235),
-    (111, 53, 235)
+    (LIGHT_ORANGE, WHITE),
+    (LIGHT_PURPLE, WHITE),
+    (BRIGHT_BLUE, WHITE)
 ]
 
 
 def fetch_color_schema(course_id: int):
-    return COLOR_SCHEMA_POOL[0]
+    return COLOR_SCHEMA_POOL[course_id % len(COLOR_SCHEMA_POOL)]
 
 
 # 生成简介图片

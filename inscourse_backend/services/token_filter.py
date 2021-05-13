@@ -8,9 +8,9 @@ def acquire_token(func):
         try:
             user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
             if not user:
-                return HttpResponse(content='Unauthorized', status=401)
+                return HttpResponse(content='登录状态已过期', status=401)
         except KeyError:
-            return HttpResponse(content='Unauthorized', status=401)
+            return HttpResponse(content='登录状态已过期', status=401)
         return func(request)
 
     return wrapper
