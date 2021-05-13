@@ -34,7 +34,7 @@ if __name__ == '__main__':
     show_separate_line()
     # course 1: Java
     status_code, response_dict = course_upload(user1_token, 'Java', 'Java', 'This is a course that teaches you how'
-                                                                    'to write programs in java.', 1)
+                                                                            'to write programs in java.', 1)
     show_info(1, status_code, response_dict)
     java_course_id = response_dict['course_id']
 
@@ -65,19 +65,22 @@ if __name__ == '__main__':
     c_plus_plus_course_id = response_dict['course_id']
 
     # course 4: Go
-    status_code, response_dict = course_upload(user2_token, 'Go', 'Go', 'Go is an amazing language developed by Google.', 1)
+    status_code, response_dict = course_upload(user2_token, 'Go', 'Go',
+                                               'Go is an amazing language developed by Google.', 1)
     show_info(7, status_code, response_dict)
     go_course_id = response_dict['course_id']
     status_code, response_dict = course_publish(user2_token, go_course_id)
 
     # course 5: Perl
-    status_code, response_dict = course_upload(user2_token, 'Perl', 'Perl', 'Perl is a language often used on Linux.', 1)
+    status_code, response_dict = course_upload(user2_token, 'Perl', 'Perl', 'Perl is a language often used on Linux.',
+                                               1)
     show_info(7, status_code, response_dict)
     perl_course_id = response_dict['course_id']
     status_code, response_dict = course_publish(user2_token, perl_course_id)
 
     # course 6: Ruby
-    status_code, response_dict = course_upload(user2_token, 'Ruby', 'Ruby', 'Ruby is a language often used on Linux.', 1)
+    status_code, response_dict = course_upload(user2_token, 'Ruby', 'Ruby', 'Ruby is a language often used on Linux.',
+                                               1)
     show_info(7, status_code, response_dict)
     ruby_course_id = response_dict['course_id']
     status_code, response_dict = course_publish(user2_token, ruby_course_id)
@@ -137,14 +140,14 @@ if __name__ == '__main__':
 
     # user 1 上传 c 资源
     status_code, response_dict = resource_release(user1_token, c_course_id, 'textbook',
-                                                  'This is the classic textbook for c programming.', 1,
+                                                  'This is the classic textbook for c programming.', 0,
                                                   'https://fakegoturl.cn')
     show_info(1, status_code, response_dict)
     c_resource1_id = response_dict['resource_id']
 
     # user 2 上传 c 资源
     status_code, response_dict = resource_release(user2_token, c_course_id, 'notes',
-                                                  'This is my notes when learning c.', 2,
+                                                  'This is my notes when learning c.', 0,
                                                   'You\'d better learn c from the very beginning to have a better'
                                                   'understanding of object oriented programming')
     show_info(2, status_code, response_dict)
@@ -156,13 +159,13 @@ if __name__ == '__main__':
 
     # user 1 修改资源 1，修改成功
     status_code, response_dict = resource_modify(user1_token, c_resource1_id, 'textbook',
-                                                 'This is the classic textbook for c programming.', 1,
+                                                 'This is the classic textbook for c programming.', 0,
                                                  'https://another.fakegoturl.cn')
     show_info(4, status_code, response_dict)
 
     # user 2 修改资源 1，修改失败
     status_code, response_dict = resource_modify(user2_token, c_resource1_id, 'textbook',
-                                                 'Useless description', 1,
+                                                 'Useless description', 0,
                                                  'https://another2.fakegoturl.cn')
     show_info(5, status_code, response_dict)
 
@@ -203,6 +206,17 @@ if __name__ == '__main__':
     # user 2 查询 c 的资源，只剩下修改过的资源 1, 点赞和收藏字段为 False
     status_code, response_dict = resource_query_by_course(user2_token, c_course_id)
     show_info(15, status_code, response_dict)
+
+    # user 1 上传其他 c 资源
+    resource_release(user1_token, c_course_id, 'textbook 3',
+                     'This is another classic textbook for c programming.', 0,
+                     'https://fakegoturl.cn')
+    resource_release(user1_token, c_course_id, 'textbook 4',
+                     'This is another classic textbook for c programming.', 0,
+                     'https://fakegoturl.cn')
+    resource_release(user1_token, c_course_id, 'video 1',
+                     'There are classic videos for c programming.', 1,
+                     'https://fakecvideos.cn')
 
     # 课友模块测试
     # ---------------------------------------------------------

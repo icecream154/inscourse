@@ -55,6 +55,7 @@ def query_resource_by_course(request):
 
     try:
         course = Course.objects.get(course_id=int(parameter_dict['course_id']))
+        content_type = int(parameter_dict['content_type'])
         CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
@@ -63,7 +64,11 @@ def query_resource_by_course(request):
             'message': u'你还未加入课程'
         }))
 
-    resources = course.resource_set.all()
+    if content_type == -1:
+        resources = course.resource_set.all()
+    else:
+        resources = course.resource_set.filter(content_type=content_type)
+
     resources_list = []
     for resource in resources:
         resources_list.append(to_resource_dict(resource, user))
@@ -210,7 +215,7 @@ def query_favored_resource(request):
     favors = ResourceFav.objects.filter(resource__course=course, user=user)
     resources_list = []
     for favor in favors:
-        resources_list.append(favor.to_resource_dict(resource, user))
+        resources_list.append(favor.to_resource_dict(favor.resource, user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
