@@ -217,6 +217,21 @@ if __name__ == '__main__':
     resource_release(user1_token, c_course_id, 'video 1',
                      'There are classic videos for c programming.', 1,
                      'https://fakecvideos.cn')
+    resource_release(user1_token, c_course_id, 'textbook 4',
+                     'This is another classic textbook4 for c programming.', 0,
+                     'https://fakegoturl.cn')
+    resource_release(user1_token, c_course_id, 'textbook 5',
+                     'This is another classic textbook5 for c programming.', 0,
+                     'https://fakegoturl.cn')
+    resource_release(user1_token, c_course_id, 'video 2',
+                     'There are classic videos2 for c programming.', 1,
+                     'https://fakecvideos.cn')
+    resource_release(user1_token, java_course_id, 'video 1',
+                     'There are classic videos for java programming.', 1,
+                     'https://fakecvideos.cn')
+    resource_release(user2_token, c_plus_plus_course_id, 'video 1',
+                     'There are classic videos for c++ programming.', 1,
+                     'https://fakecvideos.cn')
 
     # 课友模块测试
     # ---------------------------------------------------------
