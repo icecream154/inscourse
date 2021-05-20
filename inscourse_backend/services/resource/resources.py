@@ -215,7 +215,7 @@ def query_favored_resource(request):
     favors = ResourceFav.objects.filter(resource__course=course, user=user)
     resources_list = []
     for favor in favors:
-        resources_list.append(favor.to_resource_dict(resource, user))
+        resources_list.append(favor.to_resource_dict(favor.resource, user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))

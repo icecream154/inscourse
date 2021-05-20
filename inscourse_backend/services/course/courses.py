@@ -104,9 +104,9 @@ def upload_course(request):
 def get_course_icon(request):
     parameter_dict = fetch_parameter_dict(request, 'GET')
     try:
-        course_id = parameter_dict['course_id']
+        course_id = int(parameter_dict['course_id'])
         Course.objects.get(course_id=course_id)
-    except (KeyError, Course.DoesNotExist):
+    except (KeyError, ValueError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     with open(PROJECT_ROOT + '/inscourse_backend/assets/images/short_name_icon_' + str(course_id) + '.png', 'rb') as img:
