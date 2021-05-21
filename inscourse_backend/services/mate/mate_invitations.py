@@ -28,17 +28,20 @@ def query_course_mate_invitations(request):
     for invitation in invitations:
         invitations_list.append(invitation.to_dict())
     return HttpResponse(json.dumps({
-        'invitations:': invitations_list
+        'invitations': invitations_list
     }))
 
 
 @acquire_token
 def invite_mate(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
+    print(parameter_dict)
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     try:
         course_id = int(parameter_dict['course_id'])
+        print('cid: ' + str(course_id))
         description = parameter_dict['description']
+        print('cid: ' + str(course_id) + ' des:' + description)
         course = Course.objects.get(course_id=course_id)
         CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, User.DoesNotExist, Course.DoesNotExist):

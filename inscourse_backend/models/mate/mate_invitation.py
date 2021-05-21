@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from inscourse_backend.models.course.course import Course
@@ -21,10 +23,11 @@ class MateInvitation(models.Model):
     def to_dict(self):
         dictionary = {
             'invitation_id': self.invitation_id,
-            'course': self.course.course_id,
+            'course_id': self.course.course_id,
             'requester_id': self.requester.user_id,
+            'requester_name': self.requester.username,
             'invitation_code': self.invitation_code,
-            'request_time': str(self.request_time),
+            'request_time': str(datetime.date(self.request_time)),
             'description': self.description
         }
         return dictionary

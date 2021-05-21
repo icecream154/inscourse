@@ -22,6 +22,13 @@ if __name__ == '__main__':
     show_info(3, status_code, response_dict)
     # user 2
     user2_token = response_dict['token']
+
+    status_code, response_dict = sys_admin_login('test-uid-003', 'test-user3')
+    # user 3, 4
+    user3_token = response_dict['token']
+    status_code, response_dict = sys_admin_login('test-uid-004', 'test-user4')
+    user4_token = response_dict['token']
+
     status_code, response_dict = sys_get_my_info(user2_token)
     show_info(4, status_code, response_dict)
     user2_user_id = response_dict['user']['user_id']
@@ -116,6 +123,10 @@ if __name__ == '__main__':
     status_code, response_dict = course_join(user1_token, c_course_invitation_code)
     show_info(14, status_code, response_dict)
 
+    # user 3，4 加入 c 课程，加入成功
+    course_join(user3_token, c_course_invitation_code)
+    course_join(user4_token, c_course_invitation_code)
+
     # 查公开课程，应查到两个
     status_code, response_dict = course_query_open_courses(user1_token, '', 1, 'default', 5, 1)
     show_info(15, status_code, response_dict)
@@ -209,7 +220,8 @@ if __name__ == '__main__':
 
     # user 1 上传其他 c 资源
     resource_release(user1_token, c_course_id, 'textbook 3',
-                     'This is another classic textbook for c programming.', 0,
+                     '总是要有那么一个长长的不讲武德的资源简介的是不是 总是要有那么一个长长的不讲武德的资源简介的是不是 '
+                     '总是要有那么一个长长的不讲武德的资源简介的是不是 总是要有那么一个长长的不讲武德的资源简介的是不是 .', 0,
                      'https://fakegoturl.cn')
     resource_release(user1_token, c_course_id, 'textbook 4',
                      'This is another classic textbook for c programming.', 0,
@@ -244,6 +256,14 @@ if __name__ == '__main__':
     status_code, response_dict = mate_invite(user2_token, c_course_id, '求求大佬带我学c')
     show_info(2, status_code, response_dict)
     c_mate_invitation_code = response_dict['invitation_code']
+
+    # user 3 发送 c 课程邀请
+    mate_invite(user3_token, c_course_id, '求求大佬带user3学c')
+    # user 4 发送 c 课程邀请
+    mate_invite(user4_token, c_course_id, '求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c '
+                                          '求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c '
+                                          '求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c '
+                                          '求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c 求求大佬带user4学c ')
 
     # user 2 再次发送 c 课程邀请， 失败
     status_code, response_dict = mate_invite(user2_token, c_course_id, '求求大佬带我学c')

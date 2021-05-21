@@ -56,13 +56,8 @@ def query_resource_by_course(request):
     try:
         course = Course.objects.get(course_id=int(parameter_dict['course_id']))
         content_type = int(parameter_dict['content_type'])
-        CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
-    except CourseJoin.DoesNotExist:
-        return HttpResponseBadRequest(json.dumps({
-            'message': u'你还未加入课程'
-        }))
 
     if content_type == -1:
         resources = course.resource_set.all()
