@@ -187,6 +187,8 @@ def resource_fav(request):
             user=user
         )
         favor.save()
+        resource.favors += 1
+        resource.save()
         return HttpResponse(json.dumps({
             'message': u'收藏成功'
         }))
@@ -207,6 +209,8 @@ def cancel_resource_fav(request):
             'message': u'你尚未收藏该帖'
         }))
     favor.delete()
+    resource.favors -= 1
+    resource.save()
     return HttpResponse(json.dumps({
         'message': u'取消收藏成功'
     }))
@@ -224,7 +228,7 @@ def query_favored_resource(request):
     favors = ResourceFav.objects.filter(resource__course=course, user=user)
     resources_list = []
     for favor in favors:
-        resources_list.append(favor.to_resource_dict(favor.resource, user))
+        resources_list.append(to_resource_dict(favor.resource, user))
     return HttpResponse(json.dumps({
         'resources': resources_list
     }))
@@ -250,6 +254,8 @@ def resource_prefer(request):
             user=user
         )
         prefer.save()
+        resource.prefers += 1
+        resource.save()
         return HttpResponse(json.dumps({
             'message': u'点赞成功'
         }))
@@ -271,6 +277,8 @@ def cancel_resource_prefer(request):
         }))
 
     prefer.delete()
+    resource.prefers -= 1
+    resource.save()
     return HttpResponse(json.dumps({
         'message': u'已取消点赞'
     }))
