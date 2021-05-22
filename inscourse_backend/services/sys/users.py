@@ -6,8 +6,10 @@ from inscourse_backend.models.user import User
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS, APP_ID, APP_SECRET
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY, update_token
 from inscourse_backend.services.token_filter import acquire_token
+from inscourse_backend.utils.image_generator import generate_icon, fetch_user_avatar_schema
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
 from inscourse_backend.utils.rpc import do_request
+from project_config import PROJECT_ROOT
 
 
 @acquire_token
@@ -87,8 +89,13 @@ def login(request):
             'expire_time': new_expire_time
         }))
     except User.DoesNotExist:
-        new_user = User(openid=openid, username='init username')
+        new_user = User(openid=openid, username='小明')
         new_user.save()
+
+        background_color, font_color = fetch_user_avatar_schema(new_user.user_id)
+        generate_icon(new_user.username[:2], 'zh', background_color, font_color,
+                      PROJECT_ROOT + '/inscourse_backend/assets/avatar/user_avatar_' + str(
+                          new_user.user_id) + '.png')
         new_token, new_expire_time = update_token(new_user)
         return HttpResponse(json.dumps({
             'new_user': 1,
@@ -112,3 +119,16 @@ def _get_openid_of_wx_user(code):
     if status_code == 200:
         return response_dict['openid']
     return None
+
+
+def get_user_avatar(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+    try:
+        user = User.objects.get(user_id=int(parameter_dict['user_id']))
+    except (KeyError, ValueError, User.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
+    with open(PROJECT_ROOT + '/inscourse_backend/assets/avatar/user_avatar_' + str(user.user_id) + '.png', 'rb') as img:
+        return HttpResponse(img.read(), content_type='image/png')
+
+    return HttpResponseNotFound()

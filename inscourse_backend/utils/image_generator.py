@@ -37,6 +37,10 @@ def fetch_color_schema(course_id: int):
     return COLOR_SCHEMA_POOL[course_id % len(COLOR_SCHEMA_POOL)]
 
 
+def fetch_user_avatar_schema(user_id: int):
+    return COLOR_SCHEMA_POOL[user_id % len(COLOR_SCHEMA_POOL)]
+
+
 # 生成简介图片
 def generate_icon(content: str, language: str, background_color: tuple, font_color: tuple, save_path: str):
     pygame.init()

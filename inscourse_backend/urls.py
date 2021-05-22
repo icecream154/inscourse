@@ -14,6 +14,7 @@ urlpatterns = [
     path('sys/adminLogin', admin_login, name='admin_login'),
     path('sys/changeUsername', change_username, name='change_username'),
     path('sys/getMyInfo', get_my_info, name='get_my_info'),
+    path('sys/getUserAvatar', get_user_avatar, name='get_user_avatar'),
 
     # 课程模块
     path('course/queryCertainCourse', query_certain_course, name='query_certain_course'),
