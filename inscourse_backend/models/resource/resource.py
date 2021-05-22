@@ -37,3 +37,11 @@ class Resource(models.Model):
             'prefers': self.prefers
         }
         return dictionary
+
+    def validate(self):
+        valid_content_types = [0, 1, 2]
+        if len(self.description) > 50:
+            return u'简介不能超过50个字符'
+        if self.content_type not in valid_content_types:
+            return u'不支持的资源类型'
+        return None

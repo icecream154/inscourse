@@ -41,6 +41,13 @@ def release_resource(request):
         content_type=content_type,
         content=content
     )
+
+    err_msg = resource.validate()
+    if err_msg:
+        return HttpResponseBadRequest(json.dumps({
+            'message': err_msg
+        }))
+
     resource.save()
     return HttpResponse(json.dumps({
         'message': u'发布成功',
@@ -101,6 +108,13 @@ def modify_resource(request):
     resource.description = description
     resource.content_type = content_type
     resource.content = content
+
+    err_msg = resource.validate()
+    if err_msg:
+        return HttpResponseBadRequest(json.dumps({
+            'message': err_msg
+        }))
+
     resource.save()
     return HttpResponse(json.dumps({
         'message': u'修改成功'
