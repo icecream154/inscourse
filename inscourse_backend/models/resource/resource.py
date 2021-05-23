@@ -15,7 +15,7 @@ class Resource(models.Model):
     resource_key = models.CharField(max_length=20)
     # 资源介绍
     description = models.CharField(max_length=255)
-    # 资源类别 0->text, 1->video, 2->pdf
+    # 资源类别 0->text, 1->video, 2->pdf, 3->others
     content_type = models.IntegerField()
     # 资源内容
     content = models.TextField()
@@ -29,6 +29,7 @@ class Resource(models.Model):
             'resource_id': self.resource_id,
             'course_id': self.course.course_id,
             'user_id': self.user.user_id,
+            'author_name': self.user.username,
             'resource_key': self.resource_key,
             'description': self.description,
             'content_type': self.content_type,

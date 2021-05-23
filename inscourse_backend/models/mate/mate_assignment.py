@@ -21,6 +21,7 @@ class MateAssignment(models.Model):
     def to_dict(self):
         dictionary = {
             'assignment_id': self.assignment_id,
+            'course_name': self.mate.course.name,
             'mate_id': self.mate.mate_id,
             'content': self.content,
             'status': self.status,
