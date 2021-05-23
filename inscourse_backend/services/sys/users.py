@@ -1,5 +1,6 @@
 import json
 
+import requests
 from django.http import HttpResponse, HttpResponseBadRequest
 
 from inscourse_backend.models.user import User
@@ -21,15 +22,19 @@ def get_my_info(request):
 
 
 @acquire_token
-def change_username(request):
+def change_user_info(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
-        new_name = parameter_dict['newName']
+        username = parameter_dict['username']
+        workspace = parameter_dict['workspace']
+        email = parameter_dict['email']
     except KeyError:
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    user.username = new_name
+    user.username = username
+    user.workspace = workspace
+    user.email = email
     user.save()
     return HttpResponse(json.dumps({
         'message': u'修改成功'
@@ -70,6 +75,8 @@ def login(request):
     parameter_dict = fetch_parameter_dict(request, 'POST')
     try:
         code = parameter_dict['code']
+        username = parameter_dict['username']
+        avatar_url = parameter_dict['avatar_url']
     except KeyError:
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
@@ -89,13 +96,21 @@ def login(request):
             'expire_time': new_expire_time
         }))
     except User.DoesNotExist:
-        new_user = User(openid=openid, username='小明')
+        new_user = User(openid=openid, username=username)
         new_user.save()
 
         background_color, font_color = fetch_user_avatar_schema(new_user.user_id)
-        generate_icon(new_user.username[:2], 'zh', background_color, font_color,
-                      PROJECT_ROOT + '/inscourse_backend/assets/avatar/user_avatar_' + str(
-                          new_user.user_id) + '.png')
+
+        response = requests.request('GET', avatar_url)
+        print(response)
+        if response.status_code == 200:
+            with open(PROJECT_ROOT + '/inscourse_backend/assets/avatar/user_avatar_' + str(
+                              new_user.user_id) + '.png', 'wb') as f:
+                f.write(response.content)
+        else:
+            generate_icon(new_user.username[:2], 'zh', background_color, font_color,
+                          PROJECT_ROOT + '/inscourse_backend/assets/avatar/user_avatar_' + str(
+                              new_user.user_id) + '.png')
         new_token, new_expire_time = update_token(new_user)
         return HttpResponse(json.dumps({
             'new_user': 1,
