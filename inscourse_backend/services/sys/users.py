@@ -115,14 +115,14 @@ def _get_openid_of_wx_user(code):
         'grant_type': 'authorization_code'
     }
     status_code, response_dict = do_request('GET', api_url, params=params)
-    print('status_code: [%d] and response: %s' % (status_code, response_dict))
+    # print('status_code: [%d] and response: %s' % (status_code, response_dict))
     if status_code == 200:
         return response_dict['openid']
     return None
 
 
 def get_user_avatar(request):
-    parameter_dict = fetch_parameter_dict(request, 'POST')
+    parameter_dict = fetch_parameter_dict(request, 'GET')
     try:
         user = User.objects.get(user_id=int(parameter_dict['user_id']))
     except (KeyError, ValueError, User.DoesNotExist):
