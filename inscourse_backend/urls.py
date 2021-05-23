@@ -12,7 +12,7 @@ urlpatterns = [
     # 用户模块
     path('sys/login', login, name='login'),
     path('sys/adminLogin', admin_login, name='admin_login'),
-    path('sys/changeUsername', change_username, name='change_username'),
+    path('sys/changeUserInfo', change_user_info, name='change_user_info'),
     path('sys/getMyInfo', get_my_info, name='get_my_info'),
     path('sys/getUserAvatar', get_user_avatar, name='get_user_avatar'),
 

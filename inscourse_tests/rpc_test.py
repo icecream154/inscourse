@@ -33,9 +33,6 @@ if __name__ == '__main__':
     show_info(4, status_code, response_dict)
     user2_user_id = response_dict['user']['user_id']
 
-    status_code, response_dict = sys_change_username(user2_token, 'test-user2-new-name')
-    show_info(5, status_code, response_dict)
-
     # 课程模块测试
     # ---------------------------------------------------------
     show_separate_line()
