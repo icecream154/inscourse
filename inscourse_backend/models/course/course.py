@@ -20,7 +20,7 @@ class Course(models.Model):
     level = models.IntegerField()
     # 课程热度
     heat = models.IntegerField()
-    # 课程大类
+    # 课程大类 (0->计算机, 1->数学, 2->法律, 3->医学, 4->其他)
     category = models.IntegerField()
     # 课程邀请码
     invitation_code = models.CharField(max_length=8)

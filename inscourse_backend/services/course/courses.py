@@ -56,7 +56,14 @@ def query_open_courses(request):
 
 def _validate_short_name(short_name: str):
     # TODO: 实现简称校验
-    return True, 'en'
+    return True, 'zh' if _is_contain_chinese(short_name) else 'en'
+
+
+def _is_contain_chinese(check_str: str):
+    for ch in check_str:
+        if u'\u4e00' <= ch <= u'\u9fff':
+            return True
+    return False
 
 
 @acquire_token

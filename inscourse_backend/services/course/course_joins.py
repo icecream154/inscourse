@@ -45,6 +45,8 @@ def join_course(request):
         }))
     else:
         CourseJoin(user=user, course=course).save()
+        course.heat += 1
+        course.save()
         return HttpResponse(json.dumps({
             'message': u'加入课程成功'
         }))
