@@ -11,7 +11,7 @@ class MateAssignment(models.Model):
     mate = models.ForeignKey(Mate, on_delete=models.CASCADE)
     # 日程内容
     content = models.TextField()
-    # 当前状态 0: 未完成 1: 已完成
+    # 当前状态 0: 都未完成 1: requester完成 2: acceptor完成 3: 都完成
     status = models.IntegerField(default=0)
     # 计划完成时间
     assignment_date = models.DateField()
