@@ -61,6 +61,10 @@ def admin_login(request):
     except User.DoesNotExist:
         new_user = User(openid=openid, username=username)
         new_user.save()
+        background_color, font_color = fetch_user_avatar_schema(new_user.user_id)
+        generate_icon(new_user.username[:2], 'zh', background_color, font_color,
+                      PROJECT_ROOT + '/inscourse_backend/assets/avatar/user_avatar_' + str(
+                          new_user.user_id) + '.png')
         new_token, new_expire_time = update_token(new_user)
         return HttpResponse(json.dumps({
             'new_user': 1,
