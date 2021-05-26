@@ -16,12 +16,10 @@ from inscourse_backend.utils.request_processor import fetch_parameter_dict
 @acquire_token
 def query_my_mates(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
-    print(user.username)
     mates = Mate.objects.filter(Q(requester=user) | Q(acceptor=user))
     mate_list = []
     for mate in mates:
         mate_list.append(to_mate_dict(mate, user))
-    # print(mate_list)
     return HttpResponse(json.dumps({
         'mates': mate_list
     }))
