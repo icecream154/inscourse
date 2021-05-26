@@ -29,7 +29,7 @@ def query_my_assignments_by_mate(request):
     assignments = mate.mateassignment_set.all()
     assignment_list = []
     for assignment in assignments:
-        assignment_list.append(assignment.to_dict())
+        assignment_list.append(assignment.to_detail_dict(user))
     return HttpResponse(json.dumps({
         'assignments': assignment_list
     }))
@@ -64,7 +64,7 @@ def new_assignment(request):
     assignment.save()
 
     return HttpResponse(json.dumps({
-        'message': u'新建打卡计划成功',
+        'message': u'新建打卡成功',
         'assignment_id': assignment.assignment_id
     }))
 
@@ -84,6 +84,10 @@ def modify_assignment(request):
 
     # 核对schedule mate
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    if assignment.status != 0:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'打卡进行中，无法修改'
+        }))
     if assignment.mate.requester.user_id != user.user_id and assignment.mate.acceptor.user_id != user.user_id:
         return HttpResponseForbidden(json.dumps({
             'message': u'无权修改'
@@ -121,3 +125,32 @@ def delete_assignment(request):
     return HttpResponse(json.dumps({
         'message': u'删除日程成功'
     }))
+
+
+@acquire_token
+def check_assignment(request):
+    parameter_dict = fetch_parameter_dict(request, 'POST')
+
+    # 检查参数
+    try:
+        assignment_id = int(parameter_dict['assignment_id'])
+        assignment = MateAssignment.objects.get(assignment_id=assignment_id)
+    except(KeyError, TypeError, MateAssignment.DoesNotExist):
+        return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
+    # 核对assignment mate
+    user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
+    if assignment.mate.requester.user_id != user.user_id and assignment.mate.acceptor.user_id != user.user_id:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'无权打卡'
+        }))
+
+    if assignment.check_status(user) != 0:
+        assignment.save()
+        return HttpResponse(json.dumps({
+            'message': u'打卡成功'
+        }))
+    else:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'你已完成打卡'
+        }))

@@ -1,6 +1,7 @@
 from django.db import models
 
 from inscourse_backend.models.mate.mate import Mate
+from inscourse_backend.models.user import User
 from inscourse_backend.services.constants import DATE_FORMAT
 
 
@@ -29,3 +30,19 @@ class MateAssignment(models.Model):
             'done_date': self.done_date.strftime(DATE_FORMAT) if self.done_date else 'None'
         }
         return dictionary
+
+    def to_detail_dict(self, user: User):
+        dictionary = self.to_dict()
+        my_check_bit = 1 if user == self.mate.requester else 2
+        mate_check_bit = 3 - my_check_bit
+        dictionary['my_status'] = 0 if self.status & my_check_bit == 0 else 1
+        dictionary['mate_status'] = 0 if self.status & mate_check_bit == 0 else 1
+        return dictionary
+
+    def check_status(self, user: User):
+        my_check_bit = 1 if user == self.mate.requester else 2
+        if self.status & my_check_bit == 0:
+            self.status += my_check_bit
+            return my_check_bit
+        else:
+            return 0

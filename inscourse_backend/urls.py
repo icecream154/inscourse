@@ -55,5 +55,6 @@ urlpatterns = [
     path('assignment/queryMyAssignmentsByMate', query_my_assignments_by_mate, name='query_my_assignments_by_mate'),
     path('assignment/newAssignment', new_assignment, name='new_assignment'),
     path('assignment/modifyAssignment', modify_assignment, name='modify_assignment'),
-    path('assignment/deleteAssignment', delete_assignment, name='delete_assignment')
+    path('assignment/deleteAssignment', delete_assignment, name='delete_assignment'),
+    path('assignment/checkAssignment', check_assignment, name='check_assignment')
 ]
