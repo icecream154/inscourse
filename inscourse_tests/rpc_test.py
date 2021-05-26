@@ -37,13 +37,14 @@ if __name__ == '__main__':
     # ---------------------------------------------------------
     show_separate_line()
     # course 1: Java
-    status_code, response_dict = course_upload(user1_token, 'Java', 'Java', 'This is a course that teaches you how'
-                                                                            'to write programs in java.', 1)
+    status_code, response_dict = course_upload(user1_token, 'Java 程序设计', 'Java',
+                                               'This is a course that teaches you how to write programs in java.', 1)
     show_info(1, status_code, response_dict)
     java_course_id = response_dict['course_id']
 
     # course 2: C
-    status_code, response_dict = course_upload(user2_token, 'C', 'C', 'You may want to learn C here.', 1)
+    status_code, response_dict = course_upload(user2_token, 'C 程序设计', 'C',
+                                               'You may want to learn C here.', 1)
     show_info(2, status_code, response_dict)
     c_course_id = response_dict['course_id']
 
