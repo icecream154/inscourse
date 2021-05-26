@@ -5,8 +5,9 @@ from inscourse_tests.api_requests.mate_requests import *
 from inscourse_tests.api_requests.assignment_requests import *
 from inscourse_tests.rpc_utils import *
 
+
 # 数据库初始化脚本
-if __name__ == '__main__':
+def run_tests():
     # 系统模块测试
     # ---------------------------------------------------------
     show_separate_line()
@@ -372,3 +373,7 @@ if __name__ == '__main__':
     # user1 查询日程
     status_code, response_dict = assignment_query_by_mate(user1_token, c_mate_id)
     show_info(8, status_code, response_dict)
+
+
+if __name__ == '__main__':
+    run_tests()
