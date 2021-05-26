@@ -1,7 +1,5 @@
 from django.db import models
 
-from project_config import IMAGE_SERVER
-
 
 class User(models.Model):
     # 用户ID
@@ -24,7 +22,6 @@ class User(models.Model):
             'username': self.username,
             'workspace': self.workspace,
             'email': self.email,
-            'signature': self.signature,
-            'image_path': IMAGE_SERVER + 'sys/getUserAvatar?user_id=' + str(self.user_id)
+            'signature': self.signature
         }
         return dictionary
