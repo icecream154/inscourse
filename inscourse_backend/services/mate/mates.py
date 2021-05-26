@@ -1,5 +1,4 @@
 import json
-import time
 
 from django.db.models import Q
 from django.http import *
@@ -7,12 +6,11 @@ from django.http import *
 from inscourse_backend.models.course.course import Course
 from inscourse_backend.models.course.course_join import CourseJoin
 from inscourse_backend.models.mate.mate import Mate
-from inscourse_backend.models.mate.mate_assignment import MateAssignment
 from inscourse_backend.services.constants import EM_INVALID_OR_MISSING_PARAMETERS
+from inscourse_backend.services.mate.mate_dict import to_mate_dict
 from inscourse_backend.services.sys.token import fetch_user_by_token, TOKEN_HEADER_KEY
 from inscourse_backend.services.token_filter import acquire_token
 from inscourse_backend.utils.request_processor import fetch_parameter_dict
-from project_config import IMAGE_SERVER
 
 
 @acquire_token
@@ -22,20 +20,8 @@ def query_my_mates(request):
     mates = Mate.objects.filter(Q(requester=user) | Q(acceptor=user))
     mate_list = []
     for mate in mates:
-        other_user = mate.requester if user == mate.acceptor else mate.acceptor
-        curr_date = time.strftime('%Y-%m-%d')
-        finished = MateAssignment.objects.filter(Q(assignment_date__gte=curr_date) & Q(status=3)).count()
-        notfinished = MateAssignment.objects.filter(Q(assignment_date__gte=curr_date) & ~Q(status=3)).count()
-        mate_item = {
-            'mate_id': mate.mate_id,
-            'course': mate.course.name,
-            'mate_img': IMAGE_SERVER + 'sys/getUserAvatar?user_id=' + str(other_user.user_id),
-            'mate': other_user.username,
-            'finished': finished,
-            'notfinished': notfinished
-        }
-        mate_list.append(mate_item)
-    print(mate_list)
+        mate_list.append(to_mate_dict(mate, user))
+    # print(mate_list)
     return HttpResponse(json.dumps({
         'mates': mate_list
     }))
@@ -47,6 +33,7 @@ def query_my_mate_by_course(request):
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     try:
         course = Course.objects.get(course_id=int(parameter_dict['course_id']))
+        print(course.to_dict())
         CourseJoin.objects.get(course=course, user=user)
     except (KeyError, TypeError, Course.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
@@ -58,7 +45,7 @@ def query_my_mate_by_course(request):
     try:
         mate = Mate.objects.get(Q(course=course), Q(requester=user) | Q(acceptor=user))
         return HttpResponse(json.dumps({
-            'mate': mate.to_dict()
+            'mate': to_mate_dict(mate, user)
         }))
     except Mate.DoesNotExist:
         return HttpResponseBadRequest(json.dumps({
