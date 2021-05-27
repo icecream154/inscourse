@@ -28,12 +28,12 @@ def query_my_assignments_by_mate(request):
             'message': u'无权查看'
         }))
 
-    # assignments = mate.mateassignment_set.all()
+    # assignments = mate.mate.assignment_set.all()
     assignment_list = []
     assignments = MateAssignment.objects.filter(Q(mate=mate) & ~Q(status=3)).order_by('assignment_date')
     for assignment in assignments:
         assignment_list.append(assignment.to_detail_dict(user))
-    assignments = MateAssignment.objects.filter(Q(mate=mate) & Q(status=3)).order_by('assignment_date')
+    assignments = MateAssignment.objects.filter(Q(mate=mate) & Q(status=3)).order_by('done_date')
     for assignment in assignments:
         assignment_list.append(assignment.to_detail_dict(user))
     return HttpResponse(json.dumps({

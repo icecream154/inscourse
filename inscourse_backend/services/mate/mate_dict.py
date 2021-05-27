@@ -10,8 +10,8 @@ from inscourse_backend.models.user import User
 def to_mate_dict(mate: Mate, user: User):
     other_user = mate.requester if user == mate.acceptor else mate.acceptor
     curr_date = time.strftime('%Y-%m-%d')
-    finished = MateAssignment.objects.filter(Q(status=3)).count()
-    not_finished = MateAssignment.objects.filter(Q(assignment_date__gte=curr_date) & ~Q(status=3)).count()
+    finished = MateAssignment.objects.filter(Q(mate=mate) & Q(status=3)).count()
+    not_finished = MateAssignment.objects.filter(Q(mate=mate) & Q(assignment_date__gte=curr_date) & ~Q(status=3)).count()
     mate_item = {
         'mate_id': mate.mate_id,
         'course': mate.course.name,
