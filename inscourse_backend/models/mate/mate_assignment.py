@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from inscourse_backend.models.mate.mate import Mate
@@ -43,6 +45,8 @@ class MateAssignment(models.Model):
         my_check_bit = 1 if user == self.mate.requester else 2
         if self.status & my_check_bit == 0:
             self.status += my_check_bit
+            if self.status == 3:
+                self.done_date = datetime.today().date()
             return my_check_bit
         else:
             return 0
