@@ -54,6 +54,11 @@ def new_assignment(request):
     except(KeyError, ValueError, TypeError, Mate.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
 
+    if datetime.today().date() > assignment_date:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'打卡日期已过期'
+        }))
+
     # 核对 mate
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
     if mate.requester.user_id != user.user_id and mate.acceptor.user_id != user.user_id:
@@ -87,6 +92,11 @@ def modify_assignment(request):
         assignment_date = datetime.strptime(parameter_dict['assignment_date'], DATE_FORMAT).date()
     except(KeyError, ValueError, TypeError, MateAssignment.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
+    if datetime.today().date() > assignment_date:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'打卡日期已过期'
+        }))
 
     # 核对schedule mate
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])
@@ -143,6 +153,11 @@ def check_assignment(request):
         assignment = MateAssignment.objects.get(assignment_id=assignment_id)
     except(KeyError, TypeError, MateAssignment.DoesNotExist):
         return HttpResponseBadRequest(EM_INVALID_OR_MISSING_PARAMETERS)
+
+    if datetime.today().date() > assignment.assignment_date:
+        return HttpResponseForbidden(json.dumps({
+            'message': u'任务已过期'
+        }))
 
     # 核对assignment mate
     user = fetch_user_by_token(request.META[TOKEN_HEADER_KEY])

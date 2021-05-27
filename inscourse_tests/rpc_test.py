@@ -1,3 +1,5 @@
+import time
+
 from inscourse_tests.api_requests.sys_requests import *
 from inscourse_tests.api_requests.course_requests import *
 from inscourse_tests.api_requests.resource_requests import *
@@ -339,12 +341,12 @@ def run_tests():
     show_separate_line()
 
     # user2 新建 Chapter 1 日程
-    status_code, response_dict = assignment_new(user2_token, c_mate_id, 'Chapter 1', '2021-05-10')
+    status_code, response_dict = assignment_new(user2_token, c_mate_id, 'Chapter 1', time.strftime('%Y-%m-%d'))
     show_info(1, status_code, response_dict)
     c_chapter1_schedule_id = response_dict['assignment_id']
 
     # user1 新建 Chapter 2 日程
-    status_code, response_dict = assignment_new(user1_token, c_mate_id, 'Chapter 2', '2021-05-12')
+    status_code, response_dict = assignment_new(user1_token, c_mate_id, 'Chapter 2', time.strftime('%Y-%m-%d'))
     show_info(2, status_code, response_dict)
     c_chapter2_schedule_id = response_dict['assignment_id']
 
@@ -354,12 +356,12 @@ def run_tests():
 
     # user1 修改 Chapter 1 日程
     status_code, response_dict = assignment_modify(user1_token, c_chapter1_schedule_id, 'New Chapter 1',
-                                                   '2021-05-11')
+                                                   time.strftime('%Y-%m-%d'))
     show_info(4, status_code, response_dict)
 
     # user2 修改 Chapter 2 日程
     status_code, response_dict = assignment_modify(user2_token, c_chapter2_schedule_id, 'New Chapter 2',
-                                                   '2021-05-13')
+                                                   time.strftime('%Y-%m-%d'))
     show_info(5, status_code, response_dict)
 
     # user2 查询日程
